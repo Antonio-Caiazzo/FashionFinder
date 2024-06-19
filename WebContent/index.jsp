@@ -4,9 +4,9 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Insert title here</title>
+<title>Fashion Finder</title>
 </head>
 <body>
-testo
+Benvenuto in questa HomePage
 </body>
 </html>
