@@ -1,11 +1,19 @@
 package control;
 
 import java.io.IOException;
+import java.math.BigInteger;
+import java.security.MessageDigest;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.Statement;
+
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import model.DriverManagerConnectionPool;
 
 /**
  * Servlet implementation class CheckLogin
@@ -34,8 +42,45 @@ public class CheckLogin extends HttpServlet {
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
-		doGet(request, response);
+		String email = request.getParameter("email");
+		String password = request.getParameter("password");
+		String redirectedPage = "/login.jsp";
+		Boolean control = false;
+		
+		try {
+			Connection con = DriverManagerConnectionPool.getConnection();
+			String sql = "SELECT email username psw nome cognome isAdmin data_di_nascita FROM utente";
+			
+			Statement s = con.createStatement();
+			ResultSet rs = s.executeQuery(sql);
+			
+			while(rs.next()) {
+				if(email.compareTo(rs.getString(1)) == 0) {
+					String psw = checkPsw(password);
+					if (psw.compareTo(rs.getString(3)) == 0) {
+						
+					}
+				}
+			}
+			
+		}catch(Exception e) {
+			
+		}
+	}
+	
+	private String checkPsw(String psw) {
+		MessageDigest md = null;
+		try {
+			md = MessageDigest.getInstance("MD5");
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
+		byte[] messageDigest = md.digest(psw.getBytes());
+		BigInteger number = new BigInteger(1, messageDigest);
+		String hashtext = number.toString(16);
+		
+		return hashtext;
 	}
 
 }
