@@ -11,7 +11,7 @@
 	<form action="CheckLogin" method="post">
 		<fieldset>
 			
-			<label for="username">Login</label>
+			<label for="email">Login</label>
 			<input id="username" type="text" name="username" placeholder="enter login" autofocus >
 			<br>
 			<label for="password">Password</label>
