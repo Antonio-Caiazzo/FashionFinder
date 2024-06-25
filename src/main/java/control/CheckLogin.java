@@ -14,6 +14,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import model.DriverManagerConnectionPool;
+import model.Utente;
 
 /**
  * Servlet implementation class CheckLogin
@@ -58,7 +59,15 @@ public class CheckLogin extends HttpServlet {
 				if(email.compareTo(rs.getString(1)) == 0) {
 					String psw = checkPsw(password);
 					if (psw.compareTo(rs.getString(3)) == 0) {
-						
+						control = true;
+						Utente userRegistrato = new Utente();
+						userRegistrato.setEmail(rs.getString(1));
+						userRegistrato.setUsername(rs.getString(2));
+						userRegistrato.setPsw(rs.getString(3));
+						userRegistrato.setNome(rs.getString(4));
+						userRegistrato.setCognome(rs.getString(5));
+						userRegistrato.setIsAdmin(rs.getBoolean(6));
+						userRegistrato.setDataDiNascita(rs.getDate(7));
 					}
 				}
 			}
