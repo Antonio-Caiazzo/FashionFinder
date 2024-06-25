@@ -8,7 +8,7 @@
 </head>
 <body>
 	
-	<form action="" method="post">
+	<form action="CheckLogin" method="post">
 		<fieldset>
 			
 			<label for="username">Login</label>
