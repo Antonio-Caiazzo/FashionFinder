@@ -37,6 +37,10 @@ public class UtenteDAO implements BeanDAO<Utente, String> {
             statement.setDate(7, utente.getDataDiNascita() != null ? new java.sql.Date(utente.getDataDiNascita().getTime()) : null);
 
             statement.executeUpdate();
+
+        } catch (SQLException e) {
+            System.out.println("Errore SQL durante l'inserimento dell'utente: " + e.getMessage());
+            throw e; 
         }
     }
 
@@ -50,6 +54,10 @@ public class UtenteDAO implements BeanDAO<Utente, String> {
             statement.setString(1, email);
             int rowsDeleted = statement.executeUpdate();
             return rowsDeleted > 0;
+
+        } catch (SQLException e) {
+            System.out.println("Errore SQL durante l'eliminazione dell'utente: " + e.getMessage());
+            throw e; 
         }
     }
 
@@ -75,9 +83,13 @@ public class UtenteDAO implements BeanDAO<Utente, String> {
                     return utente;
                 }
             }
+
+        } catch (SQLException e) {
+            System.out.println("Errore SQL durante il recupero dell'utente: " + e.getMessage());
+            throw e; 
         }
 
-        return null; // Se non viene trovato l'utente
+        return null; 
     }
 
     @Override
@@ -104,6 +116,10 @@ public class UtenteDAO implements BeanDAO<Utente, String> {
                 utente.setDataDiNascita(resultSet.getDate("dataDiNascita"));
                 utenti.add(utente);
             }
+
+        } catch (SQLException e) {
+            System.out.println("Errore SQL durante il recupero di tutti gli utenti: " + e.getMessage());
+            throw e;
         }
 
         return utenti;
@@ -126,6 +142,10 @@ public class UtenteDAO implements BeanDAO<Utente, String> {
             statement.setString(7, utente.getEmail());
 
             return statement.executeUpdate();
+
+        } catch (SQLException e) {
+            System.out.println("Errore SQL durante l'aggiornamento dell'utente: " + e.getMessage());
+            throw e; 
         }
     }
 }
