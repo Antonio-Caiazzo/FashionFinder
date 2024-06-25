@@ -8,17 +8,17 @@
 </head>
 <body>
 	
-	<form action="Checklogin" method="post">
+	<form action="" method="post">
 		<fieldset>
 			
 			<label for="username">Login</label>
-			<input id="username" type="text" name="username" placeholder="enter login" class="LR" autofocus >
+			<input id="username" type="text" name="username" placeholder="enter login" autofocus >
 			<br>
 			<label for="password">Password</label>
-			<input id="password" type="password" name="password" placeholder="enter password" class="LR">
+			<input id="password" type="password" name="password" placeholder="enter password">
 			<br>
-			<input type="submit" value="login" class="LR">
-			<input type="reset" value="Reset" class="LR">
+			<input type="submit" value="login">
+			<input type="reset" value="Reset">
 		</fieldset>
 	</form>
 	
