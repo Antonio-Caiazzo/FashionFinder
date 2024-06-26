@@ -50,11 +50,28 @@ public class CheckLogin extends HttpServlet {
 		
 		try {
 			Connection con = DriverManagerConnectionPool.getConnection();
-			String sql = "SELECT email username psw nome cognome isAdmin data_di_nascita FROM utente";
+			String sql = "SELECT email, username, psw, nome, cognome, isAdmin, data_di_nascita FROM utente;";
 			
 			Statement s = con.createStatement();
 			ResultSet rs = s.executeQuery(sql);
 			
+			response.setContentType("text/html");
+	        java.io.PrintWriter out = response.getWriter();
+	 
+	        // Title to be displayed
+	        String title = "Geeksforgeeks Context Log program ";
+	 
+	        String docType
+	            = "<!doctype html public \"-//w3c//dtd html 4.0 "
+	              + "transitional//en\">\n";
+	        out.println(
+	            docType + "<html>\n"
+	            + "<head><title>" + title + "</title></head>\n"
+	            + "<body bgcolor = \"#f0f0f0\">\n"
+	            + "<h1 align = \"center\">" + rs.getString(1) + "</h1>\n"
+	            + "<h2 align = \"center\">Messages sent successfully </h2>\n"
+	            + "</body></html>");
+	        
 			while(rs.next()) {
 				if(email.compareTo(rs.getString(1)) == 0) {
 					String psw = checkPsw(password);
@@ -76,14 +93,15 @@ public class CheckLogin extends HttpServlet {
 						
 						redirectedPage = "/index.jsp";
 						DriverManagerConnectionPool.releaseConnection(con);
+						
+						
 					}
 				}
 			}
 			
-		}catch(Exception e) {
-			redirectedPage = "/login.jsp";
+		}catch (Exception e) {
+			redirectedPage = "/loginPage.jsp";
 		}
-		
 		if (control == false) {
 			request.getSession().setAttribute("login-error", true);
 		}
@@ -91,12 +109,13 @@ public class CheckLogin extends HttpServlet {
 			request.getSession().setAttribute("login-error", false);
 		}
 		response.sendRedirect(request.getContextPath() + redirectedPage);
+		
 	}
 	
 	private String checkPsw(String psw) {
 		MessageDigest md = null;
 		try {
-			md = MessageDigest.getInstance("MD5");
+			md = MessageDigest.getInstance("SHA-512");
 		}
 		catch (Exception e) {
 			e.printStackTrace();

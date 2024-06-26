@@ -22,7 +22,7 @@ public class DriverManagerConnectionPool {
 	
 	private static Connection createDBConnection() throws SQLException {
 		Connection newConnection = null;
-		String db = "GeekFactoryDB";
+		String db = "FashionFinder";
 		String username = "root";
 		String password = "root";
 
