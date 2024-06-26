@@ -1,0 +1,103 @@
+@charset "UTF-8";
+
+@import
+	url('https://fonts.googleapis.com/css2?family=Pacifico&family=Permanent+Marker&display=swap')
+	;
+
+body {
+	width: 100%;
+	margin: 0;
+	padding: 0;
+	background-color: #e5e7eb;
+}
+
+.navbar-container {
+	max-width: 100%;
+	background-color: #ffffff;
+	display: flex;
+	justify-content: space-between;
+	padding: 16px 36px;
+	align-items: center;
+}
+
+.navbar-logo {
+	font-family: "Pacifico", cursive;
+	font-weight: 400;
+	font-style: normal;
+	font-size: 24px;
+}
+
+.navbar-container-center {
+	gap: 0px 20px;
+	display: flex;
+}
+
+.navbar-container-center-element {
+	text-decoration: underline;
+	text-underline-offset: 2px;
+}
+
+.navbar-container-rigth {
+	gap: 0px 20px;
+	display: flex;
+}
+
+.page-title {
+	margin-top: 20px;
+	font-size: 24px;
+	font-weight: 600;
+	font-family: sans-serif;
+}
+
+.page-subTitle {
+	margin-top: 20px;
+	margin-bottom: 20px;
+	font-size: 20px;
+	font-weight: 600;
+	font-family: sans-serif;
+}
+
+.main-content-container {
+	padding: 36px;
+}
+
+.product-card {
+	display: flex;
+	flex-direction: column;
+	gap: 12px 0px;
+}
+
+.product-card-image-container {
+	height: 300px;
+	width: 300px;
+	max-height: 300px;
+	max-width: 300px;
+}
+
+.product-card-image {
+	width: 100%;
+	height: 100%;
+	border-radius: 18px;
+}
+
+.product-card-image-title {
+	font-weight: 600;
+	font-family: sans-serif;
+	margin-bottom: 6px;
+}
+
+.product-card-image-subTitle {
+	color: #707072;
+	font-family: sans-serif;
+	margin-bottom: 14px;
+}
+
+.product-card-image-price {
+	font-weight: 600;
+	font-family: sans-serif;
+}
+
+.test{
+	display: flex;
+	gap: 0px 20px;
+}

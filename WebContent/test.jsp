@@ -9,12 +9,7 @@
 </head>
 <body>
 	<%@ include file="./layout/navbar.jsp"%>
-	<div class="main-content-container">
-		<%@ include file="./layout/pageTitle.jsp"%>
-		<div class="page-subTitle">Uomo</div>
-		<%@ include file="./components/card.jsp"%>
-		<div class="page-subTitle">Donna</div>
-	</div>
+	<%@ include file="./layout/pageTitle.jsp"%>
 
 	<%@ include file="./layout/footer.jsp"%>
 </body>
