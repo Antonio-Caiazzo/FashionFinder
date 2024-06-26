@@ -11,6 +11,14 @@ if (fileName.contains(".")) {
 if (fileName.equals("index") || fileName.isEmpty()) {
 	fileName = "Homepage";
 }
+
+if (fileName.equals("uomo")) {
+	fileName = "Uomo";
+}
+
+if (fileName.equals("donna")) {
+	fileName = "Donna";
+}
 %>
 <div class="page-title"><%=fileName%></div>
 

@@ -6,7 +6,7 @@
 	<div class="footer-column">
 
 		<div class="footer-column-element">
-			<a href="#">Home</a>
+			<a href="index.jsp ">Home</a>
 		</div>
 		<div class="footer-column-element">
 			<a href="uomo.jsp">Uomo</a>
