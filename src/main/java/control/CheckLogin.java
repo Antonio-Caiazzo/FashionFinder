@@ -68,13 +68,29 @@ public class CheckLogin extends HttpServlet {
 						userRegistrato.setCognome(rs.getString(5));
 						userRegistrato.setIsAdmin(rs.getBoolean(6));
 						userRegistrato.setDataDiNascita(rs.getDate(7));
+						
+						request.getSession().setAttribute("userRegistrato", userRegistrato);
+						request.getSession().setAttribute("isAdmin", userRegistrato.getIsAdmin());
+						request.getSession().setAttribute("email", rs.getString(1));
+						request.getSession().setAttribute("username", rs.getString(2));
+						
+						redirectedPage = "/index.jsp";
+						DriverManagerConnectionPool.releaseConnection(con);
 					}
 				}
 			}
 			
 		}catch(Exception e) {
-			
+			redirectedPage = "/login.jsp";
 		}
+		
+		if (control == false) {
+			request.getSession().setAttribute("login-error", true);
+		}
+		else {
+			request.getSession().setAttribute("login-error", false);
+		}
+		response.sendRedirect(request.getContextPath() + redirectedPage);
 	}
 	
 	private String checkPsw(String psw) {
