@@ -8,6 +8,7 @@
 <link href="css/style.css" rel="stylesheet" type="text/css">
 </head>
 <body>
+
 	<%@ include file="./layout/navbar.jsp"%>
 	<div class="main-content-container">
 		<%@ include file="./layout/pageTitle.jsp"%>
