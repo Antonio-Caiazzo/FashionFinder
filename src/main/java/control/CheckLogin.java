@@ -84,7 +84,8 @@ public class CheckLogin extends HttpServlet {
 			}
 			
 		}catch (Exception e) {
-			redirectedPage = "/loginPage.jsp";
+			e.printStackTrace();
+			redirectedPage = "/login.jsp";
 		}
 		if (control == false) {
 			request.getSession().setAttribute("login-error", true);
