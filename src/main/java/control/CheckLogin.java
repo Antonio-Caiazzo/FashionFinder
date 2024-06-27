@@ -55,23 +55,7 @@ public class CheckLogin extends HttpServlet {
 			Statement s = con.createStatement();
 			ResultSet rs = s.executeQuery(sql);
 			
-			response.setContentType("text/html");
-	        java.io.PrintWriter out = response.getWriter();
-	 
-	        // Title to be displayed
-	        String title = "Geeksforgeeks Context Log program ";
-	 
-	        String docType
-	            = "<!doctype html public \"-//w3c//dtd html 4.0 "
-	              + "transitional//en\">\n";
-	        out.println(
-	            docType + "<html>\n"
-	            + "<head><title>" + title + "</title></head>\n"
-	            + "<body bgcolor = \"#f0f0f0\">\n"
-	            + "<h1 align = \"center\">" + rs.getString(1) + "</h1>\n"
-	            + "<h2 align = \"center\">Messages sent successfully </h2>\n"
-	            + "</body></html>");
-	        
+			
 			while(rs.next()) {
 				if(email.compareTo(rs.getString(1)) == 0) {
 					String psw = checkPsw(password);
@@ -113,18 +97,22 @@ public class CheckLogin extends HttpServlet {
 	}
 	
 	private String checkPsw(String psw) {
-		MessageDigest md = null;
-		try {
-			md = MessageDigest.getInstance("SHA-512");
-		}
-		catch (Exception e) {
-			e.printStackTrace();
-		}
-		byte[] messageDigest = md.digest(psw.getBytes());
-		BigInteger number = new BigInteger(1, messageDigest);
-		String hashtext = number.toString(16);
-		
-		return hashtext;
+	    MessageDigest md = null;
+	    try {
+	        md = MessageDigest.getInstance("SHA-512");
+	    }
+	    catch (Exception e) {
+	        e.printStackTrace();
+	    }
+	    byte[] messageDigest = md.digest(psw.getBytes());
+	    BigInteger number = new BigInteger(1, messageDigest);
+	    String hashtext = number.toString(16);
+
+	    while (hashtext.length() < 128) {
+	        hashtext = "0" + hashtext;
+	    }
+
+	    return hashtext;
 	}
 
 }
