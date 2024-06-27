@@ -22,11 +22,11 @@ public class DriverManagerConnectionPool {
 	
 	private static Connection createDBConnection() throws SQLException {
 		Connection newConnection = null;
-		String db = "GeekFactoryDB";
+		String db = "FashionFinder";
 		String username = "root";
 		String password = "root";
 
-		newConnection = DriverManager.getConnection("jdbc:mysql://localhost:3306/"+db, username, password);
+		newConnection = DriverManager.getConnection("jdbc:mysql://localhost:3306/"+db + "?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC", username, password);
 		
 		newConnection.setAutoCommit(false);
 		
