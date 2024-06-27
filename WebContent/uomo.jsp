@@ -11,6 +11,9 @@
 	<%@ include file="./layout/navbar.jsp"%>
 	<div class="main-content-container">
 		<%@ include file="./layout/pageTitle.jsp"%>
+		<div class="product-card-container">
+			<%@ include file="./components/card.jsp"%>
+		</div>
 		<%@ include file="./layout/footer.jsp"%>
 	</div>
 </body>

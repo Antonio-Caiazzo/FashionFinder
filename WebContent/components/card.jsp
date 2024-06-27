@@ -1,6 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
-<div class="product-card-container">
+
 <div class="product-card">
 	<div class="product-card-image-container">
 		<img alt="immagine" class="product-card-image"
@@ -94,4 +94,4 @@
 </div>
 
 
-</div>
+

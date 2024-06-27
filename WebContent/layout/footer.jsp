@@ -14,5 +14,8 @@
 		<div class="footer-column-element">
 			<a href="donna.jsp">Donna</a>
 		</div>
+
 	</div>
+	<div class="footer-columns">FashionFinder © 2024</div>
+	<div></div>
 </div>

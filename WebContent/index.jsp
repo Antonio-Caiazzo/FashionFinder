@@ -12,19 +12,8 @@
 	<%@ include file="./layout/navbar.jsp"%>
 	<div class="main-content-container">
 		<%@ include file="./layout/pageTitle.jsp"%>
-		<div class="page-subTitle">Uomo</div>
-		<div class="page-subTitle-extra">
-			<a href="uomo.jsp">Esplora l'intero catalogo</a>
-		</div>
-
-		<%@ include file="./components/card.jsp"%>
-		<div class="page-subTitle">Donna</div>
-		<div class="page-subTitle-extra">
-			<a href="donna.jsp">Esplora l'intero catalogo</a>
-
-		</div>
-
-		<%@ include file="./components/card.jsp"%>
+		<%@ include file="./dashboardManSection.jsp"%>
+		<%@ include file="./dashboardWomanSection.jsp"%>
 		<%@ include file="./layout/footer.jsp"%>
 	</div>
 
