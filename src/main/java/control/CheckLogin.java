@@ -84,7 +84,6 @@ public class CheckLogin extends HttpServlet {
 			}
 			
 		}catch (Exception e) {
-			e.printStackTrace();
 			redirectedPage = "/login.jsp";
 		}
 		if (control == false) {
