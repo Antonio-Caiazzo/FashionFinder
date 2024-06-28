@@ -19,7 +19,7 @@
 			if (prodottiObject instanceof Collection) {
 				Collection<?> prodotti = (Collection<?>) prodottiObject;
 				for (Object obj : prodotti) {
-					if (obj instanceof Prodotto) {
+					if (obj instanceof Prodotto) { 
 				Prodotto prodotto = (Prodotto) obj;
 			%>
 			<div class="product-card">
