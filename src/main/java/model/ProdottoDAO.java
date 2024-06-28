@@ -12,8 +12,7 @@ public class ProdottoDAO implements BeanDAO<Prodotto, Integer> {
 	private static final String NOME_TABELLA = "prodotto";
 	private DataSource dataSource;
 
-	public ProdottoDAO(DataSource dataSource) {
-		this.dataSource = dataSource;
+	public ProdottoDAO() {
 	}
 
 	@Override
@@ -239,6 +238,101 @@ public class ProdottoDAO implements BeanDAO<Prodotto, Integer> {
 			}
 		} catch (SQLException e) {
 			System.out.println("Errore SQL durante il recupero dei prodotti in ordine: " + e.getMessage());
+			throw e;
+		} finally {
+			if (resultSet != null) {
+				try {
+					resultSet.close();
+				} catch (SQLException e) {
+					System.out.println("Errore durante la chiusura del ResultSet: " + e.getMessage());
+				}
+			}
+			if (statement != null) {
+				try {
+					statement.close();
+				} catch (SQLException e) {
+					System.out.println("Errore durante la chiusura dello Statement: " + e.getMessage());
+				}
+			}
+			if (connection != null) {
+				try {
+					connection.close();
+				} catch (SQLException e) {
+					System.out.println("Errore durante la chiusura della connessione: " + e.getMessage());
+				}
+			}
+		}
+		return prodotti;
+	}
+
+	public Collection<Prodotto> getProdottiBySesso(char sesso) throws SQLException {
+		String selectSQL = "SELECT * FROM prodotto WHERE sesso = ?";
+		List<Prodotto> prodotti = new ArrayList<>();
+		Connection connection = null;
+		PreparedStatement statement = null;
+		ResultSet resultSet = null;
+
+		try {
+			connection = DriverManagerConnectionPool.getConnection();
+			statement = connection.prepareStatement(selectSQL);
+			statement.setString(1, String.valueOf(sesso));
+			resultSet = statement.executeQuery();
+
+			while (resultSet.next()) {
+				Prodotto prodotto = new Prodotto();
+				prodotto.setCodice(resultSet.getInt("codice"));
+				prodotto.setNome(resultSet.getString("nome"));
+				prodotto.setDescrizione(resultSet.getString("descrizione"));
+				prodotto.setCosto(resultSet.getDouble("costo"));
+				prodotto.setSesso(resultSet.getString("sesso").charAt(0));
+				prodotto.setImmagine(resultSet.getString("immagine"));
+				prodotto.setCategoria(resultSet.getString("categoria"));
+				prodotti.add(prodotto);
+			}
+		} catch (SQLException e) {
+			System.out.println("Errore SQL durante il recupero dei prodotti per sesso: " + e.getMessage());
+			throw e;
+		} finally {
+			try {
+				if (resultSet != null)
+					resultSet.close();
+				if (statement != null)
+					statement.close();
+				if (connection != null)
+					DriverManagerConnectionPool.releaseConnection(connection);
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		return prodotti;
+	}
+
+	public Collection<Prodotto> getPrimiSeiProdottiBySesso(char sesso) throws SQLException {
+		String selectSQL = "SELECT * FROM prodotto WHERE sesso = ? LIMIT 6";
+		List<Prodotto> prodotti = new ArrayList<>();
+		Connection connection = null;
+		PreparedStatement statement = null;
+		ResultSet resultSet = null;
+
+		try {
+			connection = DriverManagerConnectionPool.getConnection();
+			statement = connection.prepareStatement(selectSQL);
+			statement.setString(1, String.valueOf(sesso));
+			resultSet = statement.executeQuery();
+
+			while (resultSet.next()) {
+				Prodotto prodotto = new Prodotto();
+				prodotto.setCodice(resultSet.getInt("codice"));
+				prodotto.setNome(resultSet.getString("nome"));
+				prodotto.setDescrizione(resultSet.getString("descrizione"));
+				prodotto.setCosto(resultSet.getDouble("costo"));
+				prodotto.setSesso(resultSet.getString("sesso").charAt(0));
+				prodotto.setImmagine(resultSet.getString("immagine"));
+				prodotto.setCategoria(resultSet.getString("categoria"));
+				prodotti.add(prodotto);
+			}
+		} catch (SQLException e) {
+			System.out.println("Errore SQL durante il recupero dei primi sei prodotti per sesso: " + e.getMessage());
 			throw e;
 		} finally {
 			if (resultSet != null) {

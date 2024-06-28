@@ -9,10 +9,10 @@
 			<a href="index.jsp ">Home</a>
 		</div>
 		<div class="footer-column-element">
-			<a href="uomo.jsp">Uomo</a>
+			<a href="${pageContext.request.contextPath}/prodotti?sesso=u">Uomo</a>
 		</div>
 		<div class="footer-column-element">
-			<a href="donna.jsp">Donna</a>
+			<a href="${pageContext.request.contextPath}/prodotti?sesso=d">Donna</a>
 		</div>
 
 	</div>

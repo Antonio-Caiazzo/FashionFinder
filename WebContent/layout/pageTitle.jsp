@@ -19,6 +19,10 @@ if (fileName.equals("uomo")) {
 if (fileName.equals("donna")) {
 	fileName = "Donna";
 }
+
+if (fileName.equals("errorPage")) {
+	fileName = "Errore";
+}
 %>
 <div class="page-title"><%=fileName%></div>
 
