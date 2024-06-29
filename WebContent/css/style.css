@@ -155,3 +155,52 @@ a {
 .footer-column-element {
 	font-family: sans-serif;
 }
+
+.header-cart {
+	background-color: #f8f9fa;
+	padding: 20px;
+	text-align: center;
+	max-width: 100%;
+}
+
+#shopping-cart {
+	list-style-type: none;
+	margin: 0;
+	padding: 0;
+	max-width: 100%;
+}
+
+.shopping-item {
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: space-between;
+	align-items: center;
+	border-bottom: 1px solid #ccc;
+	padding: 10px;
+	max-width: 100%;
+}
+
+.shopping-item img {
+	width: 20%;
+	min-width: 150px;
+	border-radius: 8px;
+}
+
+.card-footer {
+	background-color: #f8f9fa;
+	padding: 20px;
+	text-align: center;
+}
+
+.quantity-input {
+	width: 50px;
+	margin-right: 5px;
+}
+
+.remove-button {
+	background-color: #dc3545;
+	color: white;
+	border: none;
+	cursor: pointer;
+	padding: 5px 10px;
+}

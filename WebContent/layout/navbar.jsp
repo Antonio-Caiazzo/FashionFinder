@@ -19,6 +19,6 @@
     <div class="navbar-container-right">
         <div>Cerca</div>
         <div>Accedi</div>
-        <div>Carrello</div>
+        <div><a href="${pageContext.request.contextPath}/carrello.jsp">Carrello</a></div>
     </div>
 </nav>

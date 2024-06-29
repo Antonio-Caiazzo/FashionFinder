@@ -5,12 +5,11 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-import javax.sql.DataSource;
+
 
 public class ProdottoDAO implements BeanDAO<Prodotto, Integer> {
 
 	private static final String NOME_TABELLA = "prodotto";
-	private DataSource dataSource;
 
 	public ProdottoDAO() {
 	}
@@ -22,7 +21,7 @@ public class ProdottoDAO implements BeanDAO<Prodotto, Integer> {
 		Connection connection = null;
 		PreparedStatement statement = null;
 		try {
-			connection = dataSource.getConnection();
+			connection = DriverManagerConnectionPool.getConnection();
 			statement = connection.prepareStatement(insertSQL);
 
 			statement.setInt(1, prodotto.getCodice());
@@ -51,7 +50,7 @@ public class ProdottoDAO implements BeanDAO<Prodotto, Integer> {
 		Connection connection = null;
 		PreparedStatement statement = null;
 		try {
-			connection = dataSource.getConnection();
+			connection = DriverManagerConnectionPool.getConnection();
 			statement = connection.prepareStatement(deleteSQL);
 
 			statement.setInt(1, codice);
@@ -73,7 +72,7 @@ public class ProdottoDAO implements BeanDAO<Prodotto, Integer> {
 		PreparedStatement statement = null;
 		ResultSet resultSet = null;
 		try {
-			connection = dataSource.getConnection();
+			connection = DriverManagerConnectionPool.getConnection();
 			statement = connection.prepareStatement(selectSQL);
 
 			statement.setInt(1, codice);
@@ -111,7 +110,7 @@ public class ProdottoDAO implements BeanDAO<Prodotto, Integer> {
 		PreparedStatement statement = null;
 		ResultSet resultSet = null;
 		try {
-			connection = dataSource.getConnection();
+			connection = DriverManagerConnectionPool.getConnection();
 			statement = connection.prepareStatement(selectSQL);
 			resultSet = statement.executeQuery();
 
@@ -167,7 +166,7 @@ public class ProdottoDAO implements BeanDAO<Prodotto, Integer> {
 		PreparedStatement statement = null;
 		ResultSet resultSet = null;
 		try {
-			connection = dataSource.getConnection();
+			connection = DriverManagerConnectionPool.getConnection();
 			statement = connection.prepareStatement(selectSQL);
 			statement.setString(1, categoria);
 			resultSet = statement.executeQuery();
@@ -220,7 +219,7 @@ public class ProdottoDAO implements BeanDAO<Prodotto, Integer> {
 		PreparedStatement statement = null;
 		ResultSet resultSet = null;
 		try {
-			connection = dataSource.getConnection();
+			connection = DriverManagerConnectionPool.getConnection();
 			statement = connection.prepareStatement(selectSQL);
 			statement.setInt(1, ordineCodice);
 			resultSet = statement.executeQuery();
@@ -366,7 +365,7 @@ public class ProdottoDAO implements BeanDAO<Prodotto, Integer> {
 		Connection connection = null;
 		PreparedStatement statement = null;
 		try {
-			connection = dataSource.getConnection();
+			connection = DriverManagerConnectionPool.getConnection();
 			statement = connection.prepareStatement(updateSQL);
 
 			statement.setString(1, prodotto.getNome());

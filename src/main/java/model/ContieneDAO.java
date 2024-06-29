@@ -5,12 +5,9 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-import javax.sql.DataSource;
-
 public class ContieneDAO implements BeanDAO<Contiene, Integer> {
 
-	private static final String NOME_TABELLA = "contiene";
-	private DataSource dataSource;
+	private static final String NOME_TABELLA = "contiene";;
 
 	public ContieneDAO() {
 
@@ -20,7 +17,7 @@ public class ContieneDAO implements BeanDAO<Contiene, Integer> {
 	public void doSave(Contiene contiene) throws SQLException {
 		String insertSQL = "INSERT INTO " + NOME_TABELLA
 				+ " (ordine_codice, prodotto_codice, quantita) VALUES (?, ?, ?)";
-		try (Connection connection = dataSource.getConnection();
+		try (Connection connection = DriverManagerConnectionPool.getConnection();
 				PreparedStatement statement = connection.prepareStatement(insertSQL)) {
 
 			statement.setInt(1, contiene.getOrdineCodice());
@@ -40,7 +37,7 @@ public class ContieneDAO implements BeanDAO<Contiene, Integer> {
 	@Override
 	public boolean doDelete(Integer ordineCodice) throws SQLException {
 		String deleteSQL = "DELETE FROM " + NOME_TABELLA + " WHERE ordine_codice = ?";
-		try (Connection connection = dataSource.getConnection();
+		try (Connection connection = DriverManagerConnectionPool.getConnection();
 				PreparedStatement statement = connection.prepareStatement(deleteSQL)) {
 
 			statement.setInt(1, ordineCodice);
@@ -56,7 +53,7 @@ public class ContieneDAO implements BeanDAO<Contiene, Integer> {
 	@Override
 	public Contiene doRetrieveByKey(Integer ordineCodice) throws SQLException {
 		String selectSQL = "SELECT * FROM " + NOME_TABELLA + " WHERE ordine_codice = ?";
-		try (Connection connection = dataSource.getConnection();
+		try (Connection connection = DriverManagerConnectionPool.getConnection();
 				PreparedStatement statement = connection.prepareStatement(selectSQL)) {
 
 			statement.setInt(1, ordineCodice);
@@ -85,7 +82,7 @@ public class ContieneDAO implements BeanDAO<Contiene, Integer> {
 		}
 
 		List<Contiene> contieneList = new ArrayList<>();
-		try (Connection connection = dataSource.getConnection();
+		try (Connection connection = DriverManagerConnectionPool.getConnection();
 				PreparedStatement statement = connection.prepareStatement(selectSQL);
 				ResultSet resultSet = statement.executeQuery()) {
 
@@ -110,7 +107,7 @@ public class ContieneDAO implements BeanDAO<Contiene, Integer> {
 		Connection connection = null;
 		PreparedStatement statement = null;
 		try {
-			connection = dataSource.getConnection();
+			connection = DriverManagerConnectionPool.getConnection();
 			statement = connection.prepareStatement(updateSQL);
 
 			statement.setInt(1, contiene.getQuantita());

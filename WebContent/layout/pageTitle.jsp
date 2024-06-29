@@ -20,6 +20,10 @@ if (fileName.equals("donna")) {
 	fileName = "Donna";
 }
 
+if (fileName.equals("carrello")) {
+	fileName = "Carrello";
+}
+
 if (fileName.equals("errorPage")) {
 	fileName = "Errore";
 }

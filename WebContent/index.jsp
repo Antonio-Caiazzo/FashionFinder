@@ -28,8 +28,11 @@
 			%>
 			<div class="product-card">
 				<div class="product-card-image-container">
-					<img alt="t" class="product-card-image"
+					<a
+						href="<%=request.getContextPath()%>/dettagliProdotto?codice=<%=prodotto.getCodice()%>">
+						<img alt="<%=prodotto.getNome()%>" class="product-card-image"
 						src="<%=request.getContextPath() + "/images/" + prodotto.getImmagine()%>">
+					</a>
 				</div>
 				<div class="product-info">
 					<div class="product-card-image-title"><%=prodotto.getNome()%></div>
@@ -55,8 +58,11 @@
 			%>
 			<div class="product-card">
 				<div class="product-card-image-container">
-					<img alt="t" class="product-card-image"
+					<a
+						href="<%=request.getContextPath()%>/dettagliProdotto?codice=<%=prodotto.getCodice()%>">
+						<img alt="<%=prodotto.getNome()%>" class="product-card-image"
 						src="<%=request.getContextPath() + "/images/" + prodotto.getImmagine()%>">
+					</a>
 				</div>
 				<div class="product-info">
 					<div class="product-card-image-title"><%=prodotto.getNome()%></div>
