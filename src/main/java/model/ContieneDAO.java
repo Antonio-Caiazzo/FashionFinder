@@ -12,8 +12,8 @@ public class ContieneDAO implements BeanDAO<Contiene, Integer> {
 	private static final String NOME_TABELLA = "contiene";
 	private DataSource dataSource;
 
-	public ContieneDAO(DataSource dataSource) {
-		this.dataSource = dataSource;
+	public ContieneDAO() {
+
 	}
 
 	@Override

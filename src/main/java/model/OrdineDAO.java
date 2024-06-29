@@ -12,8 +12,8 @@ public class OrdineDAO implements BeanDAO<Ordine, Integer> {
 	private static final String NOME_TABELLA = "ordine";
 	private DataSource dataSource;
 
-	public OrdineDAO(DataSource dataSource) {
-		this.dataSource = dataSource;
+	public OrdineDAO() {
+
 	}
 
 	@Override

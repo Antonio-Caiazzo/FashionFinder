@@ -12,8 +12,8 @@ public class IndirizzoDAO implements BeanDAO<Indirizzo, Integer> {
 	private static final String NOME_TABELLA = "indirizzo";
 	private DataSource dataSource;
 
-	public IndirizzoDAO(DataSource dataSource) {
-		this.dataSource = dataSource;
+	public IndirizzoDAO() {
+
 	}
 
 	@Override

@@ -11,8 +11,8 @@ public class CartaDAO implements BeanDAO<Carta, String> {
 	private static final String NOME_TABELLA = "carta";
 	private DataSource dataSource;
 
-	public CartaDAO(DataSource dataSource) {
-		this.dataSource = dataSource;
+	public CartaDAO() {
+
 	}
 
 	@Override

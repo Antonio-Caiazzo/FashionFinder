@@ -15,8 +15,8 @@ public class UtenteDAO implements BeanDAO<Utente, String> {
 	private static String NOME_TABELLA = "utente";
 	private DataSource dataSource;
 
-	public UtenteDAO(DataSource dataSource) {
-		this.dataSource = dataSource;
+	public UtenteDAO() {
+
 	}
 
 	@Override
