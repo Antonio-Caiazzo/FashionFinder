@@ -5,12 +5,9 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-import javax.sql.DataSource;
-
 public class OrdineDAO implements BeanDAO<Ordine, Integer> {
 
 	private static final String NOME_TABELLA = "ordine";
-	private DataSource dataSource;
 
 	public OrdineDAO() {
 
@@ -23,7 +20,7 @@ public class OrdineDAO implements BeanDAO<Ordine, Integer> {
 		PreparedStatement statement = null;
 		ResultSet rs = null;
 		try {
-			connection = dataSource.getConnection();
+			connection = DriverManagerConnectionPool.getConnection();
 			statement = connection.prepareStatement(insertSQL, Statement.RETURN_GENERATED_KEYS);
 
 			statement.setDate(1, new java.sql.Date(ordine.getData().getTime()));
@@ -72,7 +69,7 @@ public class OrdineDAO implements BeanDAO<Ordine, Integer> {
 		Connection connection = null;
 		PreparedStatement statement = null;
 		try {
-			connection = dataSource.getConnection();
+			connection = DriverManagerConnectionPool.getConnection();
 			statement = connection.prepareStatement(deleteSQL);
 
 			statement.setInt(1, codice);
@@ -106,7 +103,7 @@ public class OrdineDAO implements BeanDAO<Ordine, Integer> {
 		PreparedStatement statement = null;
 		ResultSet resultSet = null;
 		try {
-			connection = dataSource.getConnection();
+			connection = DriverManagerConnectionPool.getConnection();
 			statement = connection.prepareStatement(selectSQL);
 
 			statement.setInt(1, codice);
@@ -161,7 +158,7 @@ public class OrdineDAO implements BeanDAO<Ordine, Integer> {
 		PreparedStatement statement = null;
 		ResultSet resultSet = null;
 		try {
-			connection = dataSource.getConnection();
+			connection = DriverManagerConnectionPool.getConnection();
 			statement = connection.prepareStatement(selectSQL);
 			resultSet = statement.executeQuery();
 
@@ -208,7 +205,7 @@ public class OrdineDAO implements BeanDAO<Ordine, Integer> {
 		Connection connection = null;
 		PreparedStatement statement = null;
 		try {
-			connection = dataSource.getConnection();
+			connection = DriverManagerConnectionPool.getConnection();
 			statement = connection.prepareStatement(updateSQL);
 
 			statement.setDate(1, new java.sql.Date(ordine.getData().getTime()));

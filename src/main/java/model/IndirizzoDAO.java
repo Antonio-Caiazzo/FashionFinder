@@ -5,12 +5,9 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-import javax.sql.DataSource;
-
 public class IndirizzoDAO implements BeanDAO<Indirizzo, Integer> {
 
 	private static final String NOME_TABELLA = "indirizzo";
-	private DataSource dataSource;
 
 	public IndirizzoDAO() {
 
@@ -24,7 +21,7 @@ public class IndirizzoDAO implements BeanDAO<Indirizzo, Integer> {
 		PreparedStatement statement = null;
 		ResultSet rs = null;
 		try {
-			connection = dataSource.getConnection();
+			connection = DriverManagerConnectionPool.getConnection();
 			statement = connection.prepareStatement(insertSQL, Statement.RETURN_GENERATED_KEYS);
 
 			statement.setInt(1, indirizzo.getCap());
@@ -76,7 +73,7 @@ public class IndirizzoDAO implements BeanDAO<Indirizzo, Integer> {
 		Connection connection = null;
 		PreparedStatement statement = null;
 		try {
-			connection = dataSource.getConnection();
+			connection = DriverManagerConnectionPool.getConnection();
 			statement = connection.prepareStatement(deleteSQL);
 
 			statement.setInt(1, id);
@@ -110,7 +107,7 @@ public class IndirizzoDAO implements BeanDAO<Indirizzo, Integer> {
 		PreparedStatement statement = null;
 		ResultSet resultSet = null;
 		try {
-			connection = dataSource.getConnection();
+			connection = DriverManagerConnectionPool.getConnection();
 			statement = connection.prepareStatement(selectSQL);
 
 			statement.setInt(1, id);
@@ -168,7 +165,7 @@ public class IndirizzoDAO implements BeanDAO<Indirizzo, Integer> {
 		PreparedStatement statement = null;
 		ResultSet resultSet = null;
 		try {
-			connection = dataSource.getConnection();
+			connection = DriverManagerConnectionPool.getConnection();
 			statement = connection.prepareStatement(selectSQL);
 			resultSet = statement.executeQuery();
 
@@ -218,7 +215,7 @@ public class IndirizzoDAO implements BeanDAO<Indirizzo, Integer> {
 		Connection connection = null;
 		PreparedStatement statement = null;
 		try {
-			connection = dataSource.getConnection();
+			connection = DriverManagerConnectionPool.getConnection();
 			statement = connection.prepareStatement(updateSQL);
 
 			statement.setInt(1, indirizzo.getCap());

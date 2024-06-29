@@ -1,6 +1,5 @@
 package model;
 
-import javax.sql.DataSource;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -9,7 +8,6 @@ import java.util.List;
 public class CartaDAO implements BeanDAO<Carta, String> {
 
 	private static final String NOME_TABELLA = "carta";
-	private DataSource dataSource;
 
 	public CartaDAO() {
 
@@ -20,7 +18,7 @@ public class CartaDAO implements BeanDAO<Carta, String> {
 		String insertSQL = "INSERT INTO " + NOME_TABELLA
 				+ " (numero_carta, scadenza_carta, nome_titolare, cognome_titolare, utente_email) "
 				+ "VALUES (?, ?, ?, ?, ?)";
-		try (Connection connection = dataSource.getConnection();
+		try (Connection connection = DriverManagerConnectionPool.getConnection();
 				PreparedStatement statement = connection.prepareStatement(insertSQL)) {
 
 			statement.setString(1, carta.getNumeroCarta());
@@ -42,7 +40,7 @@ public class CartaDAO implements BeanDAO<Carta, String> {
 	@Override
 	public boolean doDelete(String numeroCarta) throws SQLException {
 		String deleteSQL = "DELETE FROM " + NOME_TABELLA + " WHERE numero_carta = ?";
-		try (Connection connection = dataSource.getConnection();
+		try (Connection connection = DriverManagerConnectionPool.getConnection();
 				PreparedStatement statement = connection.prepareStatement(deleteSQL)) {
 
 			statement.setString(1, numeroCarta);
@@ -58,7 +56,7 @@ public class CartaDAO implements BeanDAO<Carta, String> {
 	@Override
 	public Carta doRetrieveByKey(String numeroCarta) throws SQLException {
 		String selectSQL = "SELECT * FROM " + NOME_TABELLA + " WHERE numero_carta = ?";
-		try (Connection connection = dataSource.getConnection();
+		try (Connection connection = DriverManagerConnectionPool.getConnection();
 				PreparedStatement statement = connection.prepareStatement(selectSQL)) {
 
 			statement.setString(1, numeroCarta);
@@ -89,7 +87,7 @@ public class CartaDAO implements BeanDAO<Carta, String> {
 		}
 
 		List<Carta> carteList = new ArrayList<>();
-		try (Connection connection = dataSource.getConnection();
+		try (Connection connection = DriverManagerConnectionPool.getConnection();
 				PreparedStatement statement = connection.prepareStatement(selectSQL);
 				ResultSet resultSet = statement.executeQuery()) {
 
@@ -113,7 +111,7 @@ public class CartaDAO implements BeanDAO<Carta, String> {
 		String updateSQL = "UPDATE " + NOME_TABELLA
 				+ " SET scadenza_carta = ?, nome_titolare = ?, cognome_titolare = ?, utente_email = ? "
 				+ "WHERE numero_carta = ?";
-		try (Connection connection = dataSource.getConnection();
+		try (Connection connection = DriverManagerConnectionPool.getConnection();
 				PreparedStatement statement = connection.prepareStatement(updateSQL)) {
 
 			statement.setDate(1, new java.sql.Date(carta.getScadenzaCarta().getTime()));

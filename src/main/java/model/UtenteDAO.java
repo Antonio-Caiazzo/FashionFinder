@@ -8,12 +8,10 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-import javax.sql.DataSource;
 
 public class UtenteDAO implements BeanDAO<Utente, String> {
 
 	private static String NOME_TABELLA = "utente";
-	private DataSource dataSource;
 
 	public UtenteDAO() {
 
@@ -27,7 +25,7 @@ public class UtenteDAO implements BeanDAO<Utente, String> {
 		PreparedStatement statement = null;
 
 		try {
-			connection = dataSource.getConnection();
+			connection = DriverManagerConnectionPool.getConnection();
 			statement = connection.prepareStatement(insertSQL);
 
 			statement.setString(1, utente.getEmail());
@@ -64,7 +62,7 @@ public class UtenteDAO implements BeanDAO<Utente, String> {
 		PreparedStatement statement = null;
 
 		try {
-			connection = dataSource.getConnection();
+			connection = DriverManagerConnectionPool.getConnection();
 			statement = connection.prepareStatement(deleteSQL);
 
 			statement.setString(1, email);
@@ -94,7 +92,7 @@ public class UtenteDAO implements BeanDAO<Utente, String> {
 		PreparedStatement statement = null;
 
 		try {
-			connection = dataSource.getConnection();
+			connection = DriverManagerConnectionPool.getConnection();
 			statement = connection.prepareStatement(selectSQL);
 
 			statement.setString(1, email);
@@ -144,7 +142,7 @@ public class UtenteDAO implements BeanDAO<Utente, String> {
 		ResultSet resultSet = null;
 
 		try {
-			connection = dataSource.getConnection();
+			connection = DriverManagerConnectionPool.getConnection();
 			statement = connection.prepareStatement(selectSQL);
 			resultSet = statement.executeQuery();
 
@@ -188,7 +186,7 @@ public class UtenteDAO implements BeanDAO<Utente, String> {
 		PreparedStatement statement = null;
 
 		try {
-			connection = dataSource.getConnection();
+			connection = DriverManagerConnectionPool.getConnection();
 			statement = connection.prepareStatement(updateSQL);
 
 			statement.setString(1, utente.getUsername());

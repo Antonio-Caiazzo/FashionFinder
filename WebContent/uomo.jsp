@@ -19,13 +19,16 @@
 			if (prodottiObject instanceof Collection) {
 				Collection<?> prodotti = (Collection<?>) prodottiObject;
 				for (Object obj : prodotti) {
-					if (obj instanceof Prodotto) { 
+					if (obj instanceof Prodotto) {
 				Prodotto prodotto = (Prodotto) obj;
 			%>
 			<div class="product-card">
 				<div class="product-card-image-container">
-					<img alt="<%=prodotto.getNome()%>" class="product-card-image"
+					<a
+						href="<%=request.getContextPath()%>/dettagliProdotto?codice=<%=prodotto.getCodice()%>">
+						<img alt="<%=prodotto.getNome()%>" class="product-card-image"
 						src="<%=request.getContextPath() + "/images/" + prodotto.getImmagine()%>">
+					</a>
 				</div>
 				<div class="product-info">
 					<div class="product-card-image-title"><%=prodotto.getNome()%></div>
