@@ -20,7 +20,7 @@ public class UtenteDAO implements BeanDAO<Utente, String> {
 	@Override
 	public synchronized void doSave(Utente utente) throws SQLException {
 		String insertSQL = "INSERT INTO " + NOME_TABELLA
-				+ " (email, username, psw, nome, cognome, isAdmin, dataDiNascita) " + "VALUES (?, ?, ?, ?, ?, ?, ?)";
+				+ " (email, username, psw, nome, cognome, isAdmin, data_di_nascita) " + "VALUES (?, ?, ?, ?, ?, ?, ?)";
 		Connection connection = null;
 		PreparedStatement statement = null;
 
@@ -35,7 +35,7 @@ public class UtenteDAO implements BeanDAO<Utente, String> {
 			statement.setString(5, utente.getCognome());
 			statement.setBoolean(6, utente.getIsAdmin());
 			statement.setDate(7,
-					utente.getDataDiNascita() != null ? new java.sql.Date(utente.getDataDiNascita().getTime()) : null);
+					utente.getdata_di_nascita() != null ? new java.sql.Date(utente.getdata_di_nascita().getTime()) : null);
 
 			statement.executeUpdate();
 
@@ -106,7 +106,7 @@ public class UtenteDAO implements BeanDAO<Utente, String> {
 					utente.setNome(resultSet.getString("nome"));
 					utente.setCognome(resultSet.getString("cognome"));
 					utente.setIsAdmin(resultSet.getBoolean("isAdmin"));
-					utente.setDataDiNascita(resultSet.getDate("dataDiNascita"));
+					utente.setdata_di_nascita(resultSet.getDate("data_di_nascita"));
 					return utente;
 				}
 			}
@@ -154,7 +154,7 @@ public class UtenteDAO implements BeanDAO<Utente, String> {
 				utente.setNome(resultSet.getString("nome"));
 				utente.setCognome(resultSet.getString("cognome"));
 				utente.setIsAdmin(resultSet.getBoolean("isAdmin"));
-				utente.setDataDiNascita(resultSet.getDate("dataDiNascita"));
+				utente.setdata_di_nascita(resultSet.getDate("data_di_nascita"));
 				utenti.add(utente);
 			}
 
@@ -181,7 +181,7 @@ public class UtenteDAO implements BeanDAO<Utente, String> {
 
 	public int updateUtente(Utente utente) throws SQLException {
 		String updateSQL = "UPDATE " + NOME_TABELLA + " SET "
-				+ "username = ?, psw = ?, nome = ?, cognome = ?, isAdmin = ?, dataDiNascita = ? " + "WHERE email = ?";
+				+ "username = ?, psw = ?, nome = ?, cognome = ?, isAdmin = ?, data_di_nascita = ? " + "WHERE email = ?";
 		Connection connection = null;
 		PreparedStatement statement = null;
 
@@ -195,7 +195,7 @@ public class UtenteDAO implements BeanDAO<Utente, String> {
 			statement.setString(4, utente.getCognome());
 			statement.setBoolean(5, utente.getIsAdmin());
 			statement.setDate(6,
-					utente.getDataDiNascita() != null ? new java.sql.Date(utente.getDataDiNascita().getTime()) : null);
+					utente.getdata_di_nascita() != null ? new java.sql.Date(utente.getdata_di_nascita().getTime()) : null);
 			statement.setString(7, utente.getEmail());
 
 			return statement.executeUpdate();
