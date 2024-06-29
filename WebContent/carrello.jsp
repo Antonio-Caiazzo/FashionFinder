@@ -10,7 +10,7 @@
 <body>
 	<%@ include file="./layout/navbar.jsp"%>
 	<div class="main-content-container">
-		
+
 		<div class="header-cart">
 			<%@ include file="./layout/pageTitle.jsp"%>
 		</div>
@@ -23,7 +23,8 @@
 					<h3>Nome Articolo 1</h3>
 					<p>Prezzo: €19,99</p>
 					<input type="number" value="1" min="1" class="quantity-input" />
-					<button class="remove-button">Rimuovi</button>
+					<button class="secondary">Modifica</button>
+					<button class="danger">Rimuovi</button>
 				</div></li>
 
 			<li class="shopping-item"><img
@@ -33,7 +34,8 @@
 					<h3>Nome Articolo 1</h3>
 					<p>Prezzo: €19,99</p>
 					<input type="number" value="1" min="1" class="quantity-input" />
-					<button class="remove-button">Rimuovi</button>
+					<button class="secondary">Modifica</button>
+					<button class="danger">Rimuovi</button>
 				</div></li>
 		</ul>
 		<div class="card-footer">
