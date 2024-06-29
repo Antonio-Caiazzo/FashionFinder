@@ -10,7 +10,7 @@ public class Utente {
 	private String nome;
 	private String cognome;
 	private Boolean isAdmin;
-	private Date dataDiNascita;
+	private Date data_di_nascita;
 
 	public Utente() {
 		email = "";
@@ -19,7 +19,7 @@ public class Utente {
 		nome = "";
 		cognome = "";
 		isAdmin = false;
-		dataDiNascita = null;
+		data_di_nascita = null;
 	}
 
 	public String getEmail() {
@@ -70,12 +70,12 @@ public class Utente {
 		this.isAdmin = isAdmin;
 	}
 
-	public Date getDataDiNascita() {
-		return dataDiNascita;
+	public Date getdata_di_nascita() {
+		return data_di_nascita;
 	}
 
-	public void setDataDiNascita(Date dataDiNascita) {
-		this.dataDiNascita = dataDiNascita;
+	public void setdata_di_nascita(Date data_di_nascita) {
+		this.data_di_nascita = data_di_nascita;
 	}
 
 }
