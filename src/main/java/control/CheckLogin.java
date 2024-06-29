@@ -33,7 +33,7 @@ public class CheckLogin extends HttpServlet {
 		String email = request.getParameter("email");
 		String password = request.getParameter("password");
 		String redirectedPage = "/login.jsp";
-		Boolean control = false;
+		boolean control = false;
 
 		try {
 			UtenteDAO utenteDAO = new UtenteDAO();
@@ -41,7 +41,7 @@ public class CheckLogin extends HttpServlet {
 
 			if (userRegistrato != null) {
 				String psw = checkPsw(password);
-				if (psw.compareTo(userRegistrato.getPsw()) == 0) {
+				if (psw.equals(userRegistrato.getPsw())) {
 					control = true;
 					request.getSession().setAttribute("userRegistrato", userRegistrato);
 					request.getSession().setAttribute("isAdmin", userRegistrato.getIsAdmin());

@@ -19,41 +19,47 @@ if (prodottoTitle != null) {
 <body>
 	<%@ include file="./layout/navbar.jsp"%>
 	<div class="main-content-container">
-		<div class="">
+		<div class="product-detail-container">
 			<%
 			Prodotto prodotto = (Prodotto) request.getAttribute("prodotto");
 			if (prodotto != null) {
 			%>
-			<div class="">
-				<div class="">
-					<img alt="<%=prodotto.getNome()%>" class=""
-						src="<%=request.getContextPath() + "/images/" + prodotto.getImmagine()%>">
+			<img alt="<%=prodotto.getNome()%>" class="product-detail-image"
+				src="<%=request.getContextPath() + "/images/" + prodotto.getImmagine()%>">
+			<div class="product-detail-info-container">
+				<div class="product-detail-info-title"><%=prodotto.getNome()%></div>
+				<div class="product-detail-info-description"><%=prodotto.getDescrizione()%></div>
+
+				<div class="product-detail-category-container">
+					<div class="product-detail-category-title">Categoria</div>
+					<div class="product-detail-category-subtitle"><%=prodotto.getCategoria()%></div>
 				</div>
-				<div class="">
-					<h2><%=prodotto.getNome()%></h2>
-					<p><%=prodotto.getDescrizione()%></p>
-					<p>
-						Prezzo:
-						<%=prodotto.getCosto()%>
-						€
-					</p>
-					<p>
-						Sesso:
+
+				<div class="product-detail-gender-container">
+					<div class="product-detail-gender-title">Sesso</div>
+					<div class="product-detail-gender-subtitle">
 						<%
-					char sessoChar = prodotto.getSesso();
-					String sesso = String.valueOf(sessoChar);
-					if (sesso.equalsIgnoreCase("u")) {
-						out.println("Uomo");
-					} else {
-						out.println("D");
-					}
-					%>
-					</p>
-					<p>
-						Categoria:
-						<%=prodotto.getCategoria()%>
-					</p>
+						char sessoChar = prodotto.getSesso();
+						String sesso = String.valueOf(sessoChar);
+						if (sesso.equalsIgnoreCase("u")) {
+							out.println("Uomo");
+						} else if (sesso.equalsIgnoreCase("d")) {
+							out.println("Donna");
+						} else {
+							out.println("Non specificato");
+						}
+						%>
+					</div>
 				</div>
+
+				<div class="product-detail-price-container">
+					<div class="product-detail-price-title">Prezzo</div>
+					<div class="product-detail-price-subtitle"><%=prodotto.getCosto()%>
+						€
+					</div>
+				</div>
+				<button class="product-detail-button secondary" type="button">Aggiungi
+					al carrello</button>
 			</div>
 			<%
 			} else {

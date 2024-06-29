@@ -8,7 +8,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-
 public class UtenteDAO implements BeanDAO<Utente, String> {
 
 	private static String NOME_TABELLA = "utente";
@@ -35,9 +34,11 @@ public class UtenteDAO implements BeanDAO<Utente, String> {
 			statement.setString(5, utente.getCognome());
 			statement.setBoolean(6, utente.getIsAdmin());
 			statement.setDate(7,
-					utente.getdata_di_nascita() != null ? new java.sql.Date(utente.getdata_di_nascita().getTime()) : null);
+					utente.getdata_di_nascita() != null ? new java.sql.Date(utente.getdata_di_nascita().getTime())
+							: null);
 
 			statement.executeUpdate();
+			connection.commit();
 
 		} catch (SQLException e) {
 			System.out.println("Errore SQL durante l'inserimento dell'utente: " + e.getMessage());
@@ -195,7 +196,8 @@ public class UtenteDAO implements BeanDAO<Utente, String> {
 			statement.setString(4, utente.getCognome());
 			statement.setBoolean(5, utente.getIsAdmin());
 			statement.setDate(6,
-					utente.getdata_di_nascita() != null ? new java.sql.Date(utente.getdata_di_nascita().getTime()) : null);
+					utente.getdata_di_nascita() != null ? new java.sql.Date(utente.getdata_di_nascita().getTime())
+							: null);
 			statement.setString(7, utente.getEmail());
 
 			return statement.executeUpdate();
@@ -215,4 +217,36 @@ public class UtenteDAO implements BeanDAO<Utente, String> {
 			}
 		}
 	}
+
+	public boolean doesUserExist(String email) throws SQLException {
+		String selectSQL = "SELECT email FROM " + NOME_TABELLA + " WHERE email = ?";
+		Connection connection = null;
+		PreparedStatement statement = null;
+
+		try {
+			connection = DriverManagerConnectionPool.getConnection();
+			statement = connection.prepareStatement(selectSQL);
+
+			statement.setString(1, email);
+
+			try (ResultSet resultSet = statement.executeQuery()) {
+				return resultSet.next();
+			}
+
+		} catch (SQLException e) {
+			System.out.println("Errore SQL durante la verifica dell'esistenza dell'utente: " + e.getMessage());
+			throw e;
+		} finally {
+			try {
+				if (statement != null) {
+					statement.close();
+				}
+			} finally {
+				if (connection != null) {
+					connection.close();
+				}
+			}
+		}
+	}
+
 }

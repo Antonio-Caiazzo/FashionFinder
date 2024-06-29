@@ -1,13 +1,15 @@
-<%@ page language="java" contentType="text/html; charset=ISO-8859-1"
-	pageEncoding="ISO-8859-1" import="model.Utente"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+	pageEncoding="UTF-8" import="model.Utente"%>
 <%
-if (session.getAttribute("userRegistrato") != null) {
-	Utente user = (Utente) session.getAttribute("userRegistrato");
-	if (user.getEmail().compareTo("") != 0) {
+Object userObject = session.getAttribute("userRegistrato");
+if (userObject instanceof Utente) {
+	Utente user = (Utente) userObject;
+	if (user != null && user.getEmail() != null && !user.getEmail().isEmpty()) {
 		response.sendRedirect("index.jsp");
 	}
 }
 %>
+
 <jsp:useBean id="registeredUser" class="model.Utente" scope="session" />
 
 <!DOCTYPE html>
@@ -25,9 +27,9 @@ if (session.getAttribute("userRegistrato") != null) {
 			</div>
 			<form class="auth-form" action="CheckLogin" method="post">
 				<input class="auth-input" id="email" type="email" name="email"
-					placeholder="enter login" autofocus /> <input class="auth-input"
+					placeholder="e-mail" autofocus /> <input class="auth-input"
 					id="password" type="password" name="password"
-					placeholder="enter password" />
+					placeholder="password" />
 				<button class="auth-button primary" type="submit">Accedi</button>
 				<div class="auth-separator">
 					<hr class="auth-separator-hr" />
@@ -48,6 +50,7 @@ if (session.getAttribute("userRegistrato") != null) {
 				%>
 			</div>
 		</div>
+		<%@ include file="./layout/footer.jsp"%>
 	</div>
 </body>
 </html>

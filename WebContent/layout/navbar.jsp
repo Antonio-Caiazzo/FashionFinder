@@ -1,6 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
-	pageEncoding="UTF-8"%>
-
+	pageEncoding="UTF-8" import="model.Utente"%>
 <nav class="navbar-container">
 
 	<div class="navbar-logo">
@@ -19,7 +18,19 @@
 	<div class="navbar-container-right">
 		<div>Cerca</div>
 		<div>
+			<%
+			Object userObject = session.getAttribute("userRegistrato");
+			if (userObject instanceof Utente) {
+				Utente user = (Utente) userObject;
+			%>
+			<a href="${pageContext.request.contextPath}/Logout">Logout</a>
+			<%
+			} else {
+			%>
 			<a href="${pageContext.request.contextPath}/login.jsp">Accedi</a>
+			<%
+			}
+			%>
 		</div>
 		<div>
 			<a href="${pageContext.request.contextPath}/carrello.jsp">Carrello</a>
