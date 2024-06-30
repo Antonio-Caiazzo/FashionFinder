@@ -58,8 +58,13 @@ if (prodottoTitle != null) {
 						€
 					</div>
 				</div>
-				<button class="product-detail-button secondary" type="button">Aggiungi
-					al carrello</button>
+				<form action="CarrelloServlet" method="post">
+					<input type="hidden" name="action" value="add"> <input
+						type="hidden" name="codice" value="<%=prodotto.getCodice()%>">
+					<input type="hidden" name="quantity" value="1">
+					<button type="submit" class="product-detail-button secondary">Aggiungi
+						al carrello</button>
+				</form>
 			</div>
 			<%
 			} else {
@@ -69,6 +74,5 @@ if (prodottoTitle != null) {
 		</div>
 		<%@ include file="./layout/footer.jsp"%>
 	</div>
-
 </body>
 </html>

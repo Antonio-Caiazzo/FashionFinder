@@ -14,13 +14,15 @@ public class Logout extends HttpServlet {
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-		request.getSession().invalidate(); // Invalida la sessione dell'utente
-		response.sendRedirect(request.getContextPath() + "/index.jsp"); // Reindirizza alla home page
+		request.getSession().removeAttribute("userRegistrato");
+		request.getSession().removeAttribute("email");
+		request.getSession().removeAttribute("username");
+		request.getSession().removeAttribute("isAdmin");
+		response.sendRedirect(request.getContextPath() + "/index.jsp");
 	}
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		doGet(request, response);
 	}
-
 }
