@@ -15,9 +15,6 @@ import model.Utente;
 import model.UtenteDAO;
 import model.CarrelloDAO;
 
-/**
- * Servlet implementation class CheckLogin
- */
 @WebServlet("/CheckLogin")
 public class CheckLogin extends HttpServlet {
 	private static final long serialVersionUID = 1L;

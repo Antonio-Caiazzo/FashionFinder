@@ -1,5 +1,10 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8" import="model.Utente"%>
+<%@ page import="model.ProdottoDAO"%>
+<%@ page import="java.util.List"%>
+<%@ page import="model.Prodotto"%>
+<script src="${pageContext.request.contextPath}/script/search.js"></script>
+
 <link rel="stylesheet"
 	href="https://unicons.iconscout.com/release/v4.0.0/css/line.css" />
 <nav class="navbar-container">
@@ -23,9 +28,13 @@
 		<div class="navbar-container-right-element">
 			<form>
 				<div class="input-box">
-					<input type="text" placeholder="Cerca prodotto..." /> <span class="search">
-						<i class="uil uil-search search-icon"></i>
-					</span> <i class="uil uil-times close-icon"></i>
+					<input type="text" id="search-input"
+						placeholder="Cerca prodotto..." onkeyup="loadDoc()" /> <span
+						class="search" onclick="openSearch()"> <i
+						class="uil uil-search search-icon"></i>
+					</span> <i class="uil uil-times close-icon" onclick="closeSearch()"></i>
+					<div id="search-results"
+						style="position: absolute; background-color: white; width: 100%; z-index: 1000;"></div>
 				</div>
 			</form>
 		</div>
@@ -75,6 +84,40 @@
 	</div>
 </nav>
 
-<script src="${pageContext.request.contextPath}/script/search.js"></script>
+<script>
+function loadDoc() {
+    const xhttp = new XMLHttpRequest();
+    const query = document.getElementById("search-input").value;
+    if (query.length > 0) {
+        xhttp.onload = function() {
+            document.getElementById("search-results").innerHTML = this.responseText;
+            attachClickEvent();
+        }
+        xhttp.open("GET", "search.jsp?query=" + query, true);
+        xhttp.send();
+    } else {
+        document.getElementById("search-results").innerHTML = "";
+    }
+}
 
+function attachClickEvent() {
+    const items = document.querySelectorAll('#search-results div[data-id]');
+    items.forEach(item => {
+        item.addEventListener('click', () => {
+            const productId = item.getAttribute('data-id');
+            const contextPath = '<%=request.getContextPath()%>';
+            window.location.href = contextPath + '/dettagliProdotto?codice=' + productId;
+        });
+    });
+}
 
+function openSearch() {
+    document.querySelector(".input-box").classList.add("open");
+    document.getElementById("search-results").style.display = "block";
+}
+
+function closeSearch() {
+    document.querySelector(".input-box").classList.remove("open");
+    document.getElementById("search-results").style.display = "none";
+}
+</script>
