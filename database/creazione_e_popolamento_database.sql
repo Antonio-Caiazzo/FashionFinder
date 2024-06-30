@@ -55,6 +55,16 @@ CREATE TABLE prodotto (
     categoria VARCHAR(255) NOT NULL
 );
 
+DROP TABLE IF EXISTS carrello;
+CREATE TABLE carrello (
+    utente_email VARCHAR(255) NOT NULL,
+    prodotto_codice INT NOT NULL,
+    quantita INT NOT NULL,
+    PRIMARY KEY (utente_email, prodotto_codice),
+    FOREIGN KEY (utente_email) REFERENCES utente(email) ON DELETE CASCADE ON UPDATE CASCADE,
+    FOREIGN KEY (prodotto_codice) REFERENCES prodotto(codice) ON DELETE CASCADE ON UPDATE CASCADE
+);
+
 DROP TABLE IF EXISTS contiene;
 CREATE TABLE contiene (
     ordine_codice INT,
@@ -65,7 +75,7 @@ CREATE TABLE contiene (
     FOREIGN KEY (prodotto_codice) REFERENCES prodotto(codice) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
-LOCK TABLES utente WRITE, indirizzo WRITE, carta WRITE, ordine WRITE, prodotto WRITE, contiene WRITE;
+LOCK TABLES utente WRITE, indirizzo WRITE, carta WRITE, ordine WRITE, prodotto WRITE, carrello WRITE, contiene WRITE;
 
 INSERT INTO utente(email, username, psw, nome, cognome, isAdmin, data_di_nascita) VALUES
     ('admin@admin.com', 'Elon Musk Mission Mars', SHA2('admin', 512), 'Elon', 'Musk', true, '1990-01-01'),
@@ -122,6 +132,9 @@ INSERT INTO prodotto(nome, descrizione, costo, sesso, immagine, categoria) VALUE
     ('Orecchini perle', 'Orecchini eleganti perle', 29.99, 'd', 'orecchini_perle.jpg', 'gioielli'),
     ('Polo rosa', 'Polo casual rosa', 34.99, 'u', 'polo_rosa.jpg', 't-shirt'),
     ('Felpa con cappuccio', 'Felpa con cappuccio nera', 69.99, 'd', 'felpa_cappuccio.jpg', 'felpe');
+
+INSERT INTO carrello(utente_email, prodotto_codice, quantita) VALUES
+    ('user@user.com', 1, 1);  -- 1x Maglia bianca
 
 INSERT INTO contiene(ordine_codice, prodotto_codice, quantita) VALUES
     (1, 1, 1),  -- 1x Maglia bianca

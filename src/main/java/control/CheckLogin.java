@@ -3,6 +3,8 @@ package control;
 import java.io.IOException;
 import java.math.BigInteger;
 import java.security.MessageDigest;
+import java.util.Map;
+
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -11,6 +13,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import model.Utente;
 import model.UtenteDAO;
+import model.CarrelloDAO;
 
 /**
  * Servlet implementation class CheckLogin
@@ -47,6 +50,18 @@ public class CheckLogin extends HttpServlet {
 					request.getSession().setAttribute("isAdmin", userRegistrato.getIsAdmin());
 					request.getSession().setAttribute("email", userRegistrato.getEmail());
 					request.getSession().setAttribute("username", userRegistrato.getUsername());
+
+					// Sincronizzazione del carrello
+					@SuppressWarnings("unchecked")
+					Map<Integer, Integer> sessionCart = (Map<Integer, Integer>) request.getSession()
+							.getAttribute("cart");
+					if (sessionCart != null) {
+						CarrelloDAO carrelloDAO = new CarrelloDAO();
+						for (Map.Entry<Integer, Integer> entry : sessionCart.entrySet()) {
+							carrelloDAO.addOrUpdateCartItem(email, entry.getKey(), entry.getValue());
+						}
+						request.getSession().removeAttribute("cart");
+					}
 
 					redirectedPage = "/index.jsp";
 				}
