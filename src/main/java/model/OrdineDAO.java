@@ -210,4 +210,25 @@ public class OrdineDAO implements BeanDAO<Ordine, Integer> {
 			}
 		}
 	}
+
+	public List<Ordine> doRetrieveByUser(String email) throws SQLException {
+		String selectSQL = "SELECT * FROM " + NOME_TABELLA + " WHERE utente_email = ?";
+		List<Ordine> ordini = new ArrayList<>();
+		try (Connection connection = DriverManagerConnectionPool.getConnection();
+				PreparedStatement ps = connection.prepareStatement(selectSQL)) {
+			ps.setString(1, email);
+			try (ResultSet rs = ps.executeQuery()) {
+				while (rs.next()) {
+					Ordine ordine = new Ordine();
+					ordine.setCodice(rs.getInt("codice"));
+					ordine.setData(rs.getDate("data"));
+					ordine.setCostoTotale(rs.getDouble("costo_totale"));
+					ordine.setUtenteEmail(rs.getString("utente_email"));
+					ordini.add(ordine);
+				}
+			}
+		}
+		return ordini;
+	}
+
 }
