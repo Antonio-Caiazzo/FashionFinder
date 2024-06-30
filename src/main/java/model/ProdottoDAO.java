@@ -15,20 +15,19 @@ public class ProdottoDAO implements BeanDAO<Prodotto, Integer> {
 	@Override
 	public void doSave(Prodotto prodotto) throws SQLException {
 		String insertSQL = "INSERT INTO " + NOME_TABELLA
-				+ " (codice, nome, descrizione, costo, sesso, immagine, categoria) VALUES (?, ?, ?, ?, ?, ?, ?)";
+				+ " (nome, descrizione, costo, sesso, immagine, categoria) VALUES (?, ?, ?, ?, ?, ?)";
 		Connection connection = null;
 		PreparedStatement statement = null;
 		try {
 			connection = DriverManagerConnectionPool.getConnection();
 			statement = connection.prepareStatement(insertSQL);
 
-			statement.setInt(1, prodotto.getCodice());
-			statement.setString(2, prodotto.getNome());
-			statement.setString(3, prodotto.getDescrizione());
-			statement.setDouble(4, prodotto.getCosto());
-			statement.setString(5, String.valueOf(prodotto.getSesso()));
-			statement.setString(6, prodotto.getImmagine());
-			statement.setString(7, prodotto.getCategoria());
+			statement.setString(1, prodotto.getNome());
+			statement.setString(2, prodotto.getDescrizione());
+			statement.setDouble(3, prodotto.getCosto());
+			statement.setString(4, String.valueOf(prodotto.getSesso()));
+			statement.setString(5, prodotto.getImmagine());
+			statement.setString(6, prodotto.getCategoria());
 
 			int rowsAffected = statement.executeUpdate();
 			if (rowsAffected != 1) {
@@ -97,7 +96,7 @@ public class ProdottoDAO implements BeanDAO<Prodotto, Integer> {
 	}
 
 	@Override
-	public Collection<Prodotto> doRetrieveAll(String order) throws SQLException {
+	public List<Prodotto> doRetrieveAll(String order) throws SQLException {
 		String selectSQL = "SELECT * FROM " + NOME_TABELLA;
 		if (order != null && !order.isEmpty()) {
 			selectSQL += " ORDER BY " + order;
@@ -360,42 +359,19 @@ public class ProdottoDAO implements BeanDAO<Prodotto, Integer> {
 	public void updateProdotto(Prodotto prodotto) throws SQLException {
 		String updateSQL = "UPDATE " + NOME_TABELLA
 				+ " SET nome = ?, descrizione = ?, costo = ?, sesso = ?, immagine = ?, categoria = ? WHERE codice = ?";
-		Connection connection = null;
-		PreparedStatement statement = null;
-		try {
-			connection = DriverManagerConnectionPool.getConnection();
-			statement = connection.prepareStatement(updateSQL);
-
-			statement.setString(1, prodotto.getNome());
-			statement.setString(2, prodotto.getDescrizione());
-			statement.setDouble(3, prodotto.getCosto());
-			statement.setString(4, String.valueOf(prodotto.getSesso()));
-			statement.setString(5, prodotto.getImmagine());
-			statement.setString(6, prodotto.getCategoria());
-			statement.setInt(7, prodotto.getCodice());
-
-			int rowsUpdated = statement.executeUpdate();
-			if (rowsUpdated != 1) {
-				throw new SQLException("Errore durante l'aggiornamento del prodotto, righe aggiornate: " + rowsUpdated);
-			}
+		try (Connection connection = DriverManagerConnectionPool.getConnection();
+				PreparedStatement ps = connection.prepareStatement(updateSQL)) {
+			ps.setString(1, prodotto.getNome());
+			ps.setString(2, prodotto.getDescrizione());
+			ps.setDouble(3, prodotto.getCosto());
+			ps.setString(4, String.valueOf(prodotto.getSesso()));
+			ps.setString(5, prodotto.getImmagine());
+			ps.setString(6, prodotto.getCategoria());
+			ps.setInt(7, prodotto.getCodice());
+			ps.executeUpdate();
+			connection.commit();
 		} catch (SQLException e) {
-			System.out.println("Errore SQL durante l'aggiornamento del prodotto: " + e.getMessage());
-			throw e;
-		} finally {
-			if (statement != null) {
-				try {
-					statement.close();
-				} catch (SQLException e) {
-					System.out.println("Errore durante la chiusura dello Statement: " + e.getMessage());
-				}
-			}
-			if (connection != null) {
-				try {
-					connection.close();
-				} catch (SQLException e) {
-					System.out.println("Errore durante la chiusura della connessione: " + e.getMessage());
-				}
-			}
+			throw new SQLException("Errore durante l'aggiornamento del prodotto: " + e.getMessage());
 		}
 	}
 
