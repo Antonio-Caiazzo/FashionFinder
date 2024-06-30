@@ -1,16 +1,16 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
-	pageEncoding="UTF-8"%>
+	pageEncoding="UTF-8"
+	import="model.*, java.util.*, java.sql.SQLException"%>
 <!DOCTYPE html>
 <html>
 <head>
 <meta charset="UTF-8">
-<title>FashionFinder - Ordini</title>
+<title>FashionFinder - Gestione Catalogo</title>
 <link href="css/style.css" rel="stylesheet" type="text/css">
 </head>
 <body>
 	<%@ include file="./layout/navbar.jsp"%>
 	<div class="main-content-container">
-
 		<table>
 			<caption>Catalogo</caption>
 			<thead>
@@ -22,37 +22,37 @@
 				</tr>
 			</thead>
 			<tbody>
+				<%
+				ProdottoDAO prodottoDAO = new ProdottoDAO();
+				List<Prodotto> prodotti = null;
+				try {
+					prodotti = prodottoDAO.doRetrieveAll(null);
+				} catch (SQLException e) {
+					response.sendRedirect("errorPage.jsp");
+				}
+				if (prodotti != null) {
+					for (Prodotto prodotto : prodotti) {
+				%>
 				<tr>
-					<td scope="row" data-label="Id">1</td>
-					<td data-label="Data">Maglia</td>
-					<td data-label="Importo totale">Uomo</td>
-					<td data-label="Dettagli">
-						<button class="secondary">Modifica</button>
-					</td>
+					<td scope="row" data-label="Id"><%=prodotto.getCodice()%></td>
+					<td data-label="Nome Prodotto"><%=prodotto.getNome()%></td>
+					<td data-label="Sesso"><%=prodotto.getSesso()%></td>
+					<td data-label="Azione"><a
+						href="modificaProdotto.jsp?prodottoId=<%=prodotto.getCodice()%>">
+							<button class="secondary">Modifica</button>
+					</a></td>
 				</tr>
-				<tr>
-					<td scope="row" data-label="Id">2</td>
-					<td data-label="Data">Maglia</td>
-					<td data-label="Importo totale">Uomo</td>
-					<td data-label="Dettagli">
-						<button class="secondary">Modifica</button>
-					</td>
-				</tr>
-				<tr>
-					<td scope="row" data-label="Id">3</td>
-					<td data-label="Data">Maglia</td>
-					<td data-label="Importo totale">Donna</td>
-					<td data-label="Dettagli">
-						<button class="secondary">Modifica</button>
-					</td>
-				</tr>
+				<%
+				}
+				}
+				%>
 			</tbody>
 		</table>
 		<div style="width: 100%; display: flex; justify-content: center;">
-			<button class="ordini-button secondary">Aggiungi prodotto</button>
+			<a href="aggiungiProdotto.jsp">
+				<button class="ordini-button secondary">Aggiungi prodotto</button>
+			</a>
 		</div>
-
-
 		<%@ include file="./layout/footer.jsp"%>
 	</div>
 </body>
