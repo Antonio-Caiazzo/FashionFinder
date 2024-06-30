@@ -5,8 +5,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-
-
 public class ProdottoDAO implements BeanDAO<Prodotto, Integer> {
 
 	private static final String NOME_TABELLA = "prodotto";
@@ -399,5 +397,31 @@ public class ProdottoDAO implements BeanDAO<Prodotto, Integer> {
 				}
 			}
 		}
+	}
+
+	public List<Prodotto> searchProductsByName(String name) {
+		List<Prodotto> prodotti = new ArrayList<>();
+		try (Connection connection = DriverManagerConnectionPool.getConnection()) {
+			String query = "SELECT * FROM prodotto WHERE nome LIKE ?";
+			try (PreparedStatement ps = connection.prepareStatement(query)) {
+				ps.setString(1, "%" + name + "%");
+				try (ResultSet rs = ps.executeQuery()) {
+					while (rs.next()) {
+						Prodotto prodotto = new Prodotto();
+						prodotto.setCodice(rs.getInt("codice"));
+						prodotto.setNome(rs.getString("nome"));
+						prodotto.setDescrizione(rs.getString("descrizione"));
+						prodotto.setCosto(rs.getDouble("costo"));
+						prodotto.setSesso(rs.getString("sesso").charAt(0));
+						prodotto.setImmagine(rs.getString("immagine"));
+						prodotto.setCategoria(rs.getString("categoria"));
+						prodotti.add(prodotto);
+					}
+				}
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return prodotti;
 	}
 }
