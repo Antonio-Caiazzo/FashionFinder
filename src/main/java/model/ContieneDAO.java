@@ -156,4 +156,23 @@ public class ContieneDAO implements BeanDAO<Contiene, Integer> {
 		}
 	}
 
+	public List<Contiene> doRetrieveByOrdine(int ordineCodice) throws SQLException {
+		String selectSQL = "SELECT * FROM contiene WHERE ordine_codice = ?";
+		List<Contiene> contieneList = new ArrayList<>();
+		try (Connection connection = DriverManagerConnectionPool.getConnection();
+				PreparedStatement ps = connection.prepareStatement(selectSQL)) {
+			ps.setInt(1, ordineCodice);
+			try (ResultSet rs = ps.executeQuery()) {
+				while (rs.next()) {
+					Contiene contiene = new Contiene();
+					contiene.setOrdineCodice(rs.getInt("ordine_codice"));
+					contiene.setProdottoCodice(rs.getInt("prodotto_codice"));
+					contiene.setQuantita(rs.getInt("quantita"));
+					contieneList.add(contiene);
+				}
+			}
+		}
+		return contieneList;
+	}
+
 }
