@@ -8,13 +8,6 @@ public class Ordine {
 	private double costoTotale;
 	private String utenteEmail;
 
-	public Ordine() {
-		this.codice = 0;
-		this.data = null;
-		this.costoTotale = 0.0;
-		this.utenteEmail = "";
-	}
-
 	public int getCodice() {
 		return codice;
 	}

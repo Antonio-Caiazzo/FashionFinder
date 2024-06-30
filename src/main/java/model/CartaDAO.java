@@ -107,6 +107,27 @@ public class CartaDAO implements BeanDAO<Carta, String> {
 		return carteList;
 	}
 
+	public List<Carta> doRetrieveByUtenteEmail(String email) throws SQLException {
+		String selectSQL = "SELECT * FROM " + NOME_TABELLA + " WHERE utente_email = ?";
+		try (Connection connection = DriverManagerConnectionPool.getConnection();
+				PreparedStatement statement = connection.prepareStatement(selectSQL)) {
+			statement.setString(1, email);
+			try (ResultSet resultSet = statement.executeQuery()) {
+				List<Carta> carte = new ArrayList<>();
+				while (resultSet.next()) {
+					Carta carta = new Carta();
+					carta.setNumeroCarta(resultSet.getString("numero_carta"));
+					carta.setScadenzaCarta(resultSet.getDate("scadenza_carta"));
+					carta.setNomeTitolare(resultSet.getString("nome_titolare"));
+					carta.setCognomeTitolare(resultSet.getString("cognome_titolare"));
+					carta.setUtenteEmail(resultSet.getString("utente_email"));
+					carte.add(carta);
+				}
+				return carte;
+			}
+		}
+	}
+
 	public void updateCarta(Carta carta) throws SQLException {
 		String updateSQL = "UPDATE " + NOME_TABELLA
 				+ " SET scadenza_carta = ?, nome_titolare = ?, cognome_titolare = ?, utente_email = ? "

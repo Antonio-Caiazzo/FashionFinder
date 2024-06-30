@@ -34,6 +34,22 @@ public class ContieneDAO implements BeanDAO<Contiene, Integer> {
 		}
 	}
 
+	public void doSave(int ordineCodice, int prodottoCodice, int quantita) throws SQLException {
+		String insertSQL = "INSERT INTO " + NOME_TABELLA
+				+ " (ordine_codice, prodotto_codice, quantita) VALUES (?, ?, ?)";
+		try (Connection connection = DriverManagerConnectionPool.getConnection();
+				PreparedStatement statement = connection.prepareStatement(insertSQL)) {
+			statement.setInt(1, ordineCodice);
+			statement.setInt(2, prodottoCodice);
+			statement.setInt(3, quantita);
+			statement.executeUpdate();
+			connection.commit();
+		} catch (SQLException e) {
+			e.printStackTrace();
+			throw new SQLException("Errore nell'inserimento del prodotto nell'ordine: " + e.getMessage());
+		}
+	}
+
 	@Override
 	public boolean doDelete(Integer ordineCodice) throws SQLException {
 		String deleteSQL = "DELETE FROM " + NOME_TABELLA + " WHERE ordine_codice = ?";

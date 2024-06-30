@@ -6,9 +6,8 @@ if (userObject instanceof Utente) {
 	Utente user = (Utente) userObject;
 	if (user != null && user.getEmail() != null && !user.getEmail().isEmpty()) {
 		response.sendRedirect("index.jsp");
-		return; 
-	}
-	else {
+		return;
+	} else {
 		response.sendRedirect("errorPage.jsp");
 	}
 }
@@ -20,7 +19,7 @@ if (userObject instanceof Utente) {
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Registrazione</title>
+<title>FashionFinder - Registrazione</title>
 <link href="css/style.css" rel="stylesheet" type="text/css">
 </head>
 <body>

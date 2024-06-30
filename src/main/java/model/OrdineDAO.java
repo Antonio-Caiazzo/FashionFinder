@@ -14,52 +14,25 @@ public class OrdineDAO implements BeanDAO<Ordine, Integer> {
 	}
 
 	@Override
-	public synchronized void doSave(Ordine ordine) throws SQLException {
+	public void doSave(Ordine ordine) throws SQLException {
 		String insertSQL = "INSERT INTO " + NOME_TABELLA + " (data, costo_totale, utente_email) VALUES (?, ?, ?)";
-		Connection connection = null;
-		PreparedStatement statement = null;
-		ResultSet rs = null;
-		try {
-			connection = DriverManagerConnectionPool.getConnection();
-			statement = connection.prepareStatement(insertSQL, Statement.RETURN_GENERATED_KEYS);
-
+		try (Connection connection = DriverManagerConnectionPool.getConnection();
+				PreparedStatement statement = connection.prepareStatement(insertSQL, Statement.RETURN_GENERATED_KEYS)) {
 			statement.setDate(1, new java.sql.Date(ordine.getData().getTime()));
 			statement.setDouble(2, ordine.getCostoTotale());
 			statement.setString(3, ordine.getUtenteEmail());
+			statement.executeUpdate();
 
-			if (statement.executeUpdate() != 1) {
-				throw new SQLException("Errore INSERT INTO");
+			try (ResultSet rs = statement.getGeneratedKeys()) {
+				if (rs.next()) {
+					ordine.setCodice(rs.getInt(1));
+				}
 			}
 
-			rs = statement.getGeneratedKeys();
-			if (rs.next()) {
-				ordine.setCodice(rs.getInt(1));
-			}
+			connection.commit();
 		} catch (SQLException e) {
-			System.out.println("Errore SQL durante l'inserimento dell'ordine: " + e.getMessage());
-			throw e;
-		} finally {
-			try {
-				if (rs != null) {
-					rs.close();
-				}
-			} catch (SQLException e) {
-				System.out.println("Errore durante la chiusura del ResultSet: " + e.getMessage());
-			}
-			try {
-				if (statement != null) {
-					statement.close();
-				}
-			} catch (SQLException e) {
-				System.out.println("Errore durante la chiusura dello Statement: " + e.getMessage());
-			}
-			try {
-				if (connection != null) {
-					connection.close();
-				}
-			} catch (SQLException e) {
-				System.out.println("Errore durante la chiusura della connessione: " + e.getMessage());
-			}
+			e.printStackTrace();
+			throw new SQLException("Errore nell'inserimento dell'ordine: " + e.getMessage());
 		}
 	}
 

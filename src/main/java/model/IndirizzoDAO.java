@@ -209,6 +209,29 @@ public class IndirizzoDAO implements BeanDAO<Indirizzo, Integer> {
 		return indirizzi;
 	}
 
+	public List<Indirizzo> doRetrieveByUtenteEmail(String email) throws SQLException {
+		String selectSQL = "SELECT * FROM " + NOME_TABELLA + " WHERE utente_email = ?";
+		try (Connection connection = DriverManagerConnectionPool.getConnection();
+				PreparedStatement statement = connection.prepareStatement(selectSQL)) {
+			statement.setString(1, email);
+			try (ResultSet resultSet = statement.executeQuery()) {
+				List<Indirizzo> indirizzi = new ArrayList<>();
+				while (resultSet.next()) {
+					Indirizzo indirizzo = new Indirizzo();
+					indirizzo.setId(resultSet.getInt("id"));
+					indirizzo.setCap(resultSet.getInt("cap"));
+					indirizzo.setCitta(resultSet.getString("citta"));
+					indirizzo.setProvincia(resultSet.getString("provincia"));
+					indirizzo.setVia(resultSet.getString("via"));
+					indirizzo.setCivico(resultSet.getInt("civico"));
+					indirizzo.setUtenteEmail(resultSet.getString("utente_email"));
+					indirizzi.add(indirizzo);
+				}
+				return indirizzi;
+			}
+		}
+	}
+
 	public synchronized void updateIndirizzo(Indirizzo indirizzo) throws SQLException {
 		String updateSQL = "UPDATE " + NOME_TABELLA
 				+ " SET cap = ?, citta = ?, provincia = ?, via = ?, civico = ?, utente_email = ? WHERE id = ?";
@@ -251,4 +274,5 @@ public class IndirizzoDAO implements BeanDAO<Indirizzo, Integer> {
 			}
 		}
 	}
+
 }

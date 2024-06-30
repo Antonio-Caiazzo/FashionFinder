@@ -16,7 +16,7 @@ if (userObject instanceof Utente) {
 <html>
 <head>
 <meta charset="ISO-8859-1">
-<title>Login</title>
+<title>FashionFinder - Login</title>
 <link href="css/style.css" rel="stylesheet" type="text/css">
 </head>
 <body>

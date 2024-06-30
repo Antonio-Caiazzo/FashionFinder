@@ -11,13 +11,6 @@
 <meta charset="UTF-8" />
 <title>FashionFinder - Carrello</title>
 <link href="css/style.css" rel="stylesheet" type="text/css">
-<style>
-.form-container {
-	display: flex;
-	align-items: center;
-	gap: 10px;
-}
-</style>
 </head>
 <body>
 	<%@ include file="./layout/navbar.jsp"%>
@@ -83,6 +76,17 @@
 			<p>
 				Totale: €<span id="total-price"><%=String.format("%.2f", total)%></span>
 			</p>
+			<%
+			if (cart != null && !cart.isEmpty()) {
+			%>
+			<form
+				action="<%=(userRegistrato != null) ? "checkout.jsp" : "login.jsp"%>"
+				method="get">
+				<button type="submit" class="secondary">Paga Ora</button>
+			</form>
+			<%
+			}
+			%>
 		</div>
 		<%@ include file="./layout/footer.jsp"%>
 	</div>
