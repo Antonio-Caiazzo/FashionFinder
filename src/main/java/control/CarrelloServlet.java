@@ -1,6 +1,7 @@
 package control;
 
 import java.io.IOException;
+import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -61,10 +62,20 @@ public class CarrelloServlet extends HttpServlet {
 		if (userRegistrato != null) {
 			CarrelloDAO carrelloDAO = new CarrelloDAO();
 			if ("remove".equals(action)) {
-				carrelloDAO.removeCartItem(userRegistrato.getEmail(), codice);
+				try {
+					carrelloDAO.removeCartItem(userRegistrato.getEmail(), codice);
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 			} else {
 				for (Map.Entry<Integer, Integer> entry : cart.entrySet()) {
-					carrelloDAO.addOrUpdateCartItem(userRegistrato.getEmail(), entry.getKey(), entry.getValue());
+					try {
+						carrelloDAO.addOrUpdateCartItem(userRegistrato.getEmail(), entry.getKey(), entry.getValue());
+					} catch (SQLException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
 				}
 			}
 		}

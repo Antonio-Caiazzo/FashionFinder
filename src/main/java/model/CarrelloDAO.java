@@ -9,34 +9,28 @@ import java.util.Map;
 
 public class CarrelloDAO {
 
-	public void addOrUpdateCartItem(String email, int codice, int quantity) {
-		try (Connection connection = DriverManagerConnectionPool.getConnection()) {
-			String query = "INSERT INTO carrello (utente_email, prodotto_codice, quantita) VALUES (?, ?, ?) "
-					+ "ON DUPLICATE KEY UPDATE quantita = ?";
-			try (PreparedStatement ps = connection.prepareStatement(query)) {
-				ps.setString(1, email);
-				ps.setInt(2, codice);
-				ps.setInt(3, quantity);
-				ps.setInt(4, quantity);
-				ps.executeUpdate();
-				connection.commit();
-			}
-		} catch (SQLException e) {
-			e.printStackTrace();
+	public void addOrUpdateCartItem(String email, int codice, int quantity) throws SQLException {
+		String query = "INSERT INTO carrello (utente_email, prodotto_codice, quantita) VALUES (?, ?, ?) "
+				+ "ON DUPLICATE KEY UPDATE quantita = ?";
+		try (Connection connection = DriverManagerConnectionPool.getConnection();
+				PreparedStatement ps = connection.prepareStatement(query)) {
+			ps.setString(1, email);
+			ps.setInt(2, codice);
+			ps.setInt(3, quantity);
+			ps.setInt(4, quantity);
+			ps.executeUpdate();
+			connection.commit();
 		}
 	}
 
-	public void removeCartItem(String email, int codice) {
-		try (Connection connection = DriverManagerConnectionPool.getConnection()) {
-			String query = "DELETE FROM carrello WHERE utente_email = ? AND prodotto_codice = ?";
-			try (PreparedStatement ps = connection.prepareStatement(query)) {
-				ps.setString(1, email);
-				ps.setInt(2, codice);
-				ps.executeUpdate();
-				connection.commit();
-			}
-		} catch (SQLException e) {
-			e.printStackTrace();
+	public void removeCartItem(String email, int codice) throws SQLException {
+		String query = "DELETE FROM carrello WHERE utente_email = ? AND prodotto_codice = ?";
+		try (Connection connection = DriverManagerConnectionPool.getConnection();
+				PreparedStatement ps = connection.prepareStatement(query)) {
+			ps.setString(1, email);
+			ps.setInt(2, codice);
+			ps.executeUpdate();
+			connection.commit();
 		}
 	}
 
@@ -56,5 +50,15 @@ public class CarrelloDAO {
 			e.printStackTrace();
 		}
 		return cart;
+	}
+
+	public void clearCart(String email) throws SQLException {
+		String query = "DELETE FROM carrello WHERE utente_email = ?";
+		try (Connection connection = DriverManagerConnectionPool.getConnection();
+				PreparedStatement ps = connection.prepareStatement(query)) {
+			ps.setString(1, email);
+			ps.executeUpdate();
+			connection.commit();
+		}
 	}
 }

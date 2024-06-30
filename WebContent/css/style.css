@@ -79,6 +79,12 @@ button {
 	transform: perspective(1000px);
 }
 
+.form-container {
+	display: flex;
+	align-items: center;
+	gap: 10px;
+}
+
 .dropdown-menu {
 	background-color: #fff;
 	list-style-type: none;
