@@ -38,11 +38,11 @@ public class ModificaProdottoServlet extends HttpServlet {
 		Prodotto prodotto = new Prodotto();
 		prodotto.setCodice(codice);
 		prodotto.setNome(sanitizeInput(nome));
-		prodotto.setDescrizione(descrizione);
+		prodotto.setDescrizione(sanitizeInput(descrizione));
 		prodotto.setCosto(costo);
 		prodotto.setSesso(sesso);
-		prodotto.setImmagine(immagine);
-		prodotto.setCategoria(categoria);
+		prodotto.setImmagine(sanitizeInput(immagine));
+		prodotto.setCategoria(sanitizeInput(categoria));
 
 		ProdottoDAO prodottoDAO = new ProdottoDAO();
 		try {
