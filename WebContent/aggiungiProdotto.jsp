@@ -5,7 +5,14 @@
 <head>
 <meta charset="UTF-8">
 <title>FashionFinder - Aggiungi Prodotto</title>
-<link href="css/style.css" rel="stylesheet" type="text/css">
+<link href="${pageContext.request.contextPath}/css/style.css"
+	rel="stylesheet" type="text/css">
+<script src="${pageContext.request.contextPath}/script/search.js"></script>
+<style>
+.error-message {
+	color: red;
+}
+</style>
 </head>
 <body>
 	<%@ include file="./layout/navbar.jsp"%>
@@ -16,19 +23,30 @@
 					<h2>Aggiungi Prodotto</h2>
 				</div>
 			</div>
-
-			<form class="auth-form" action="AggiungiProdottoServlet"
-				method="post">
+			<%
+			if (request.getAttribute("errorMessage") != null) {
+			%>
+			<div class="error-message"><%=request.getAttribute("errorMessage")%></div>
+			<%
+			}
+			%>
+			<form class="auth-form" name="productForm"
+				action="AggiungiProdottoServlet" method="post"
+				enctype="multipart/form-data">
 				<div class="auth-container-header-text">Prodotto</div>
 				<input class="auth-input" type="text" name="nome" placeholder="Nome"
 					required /> <input class="auth-input" type="text"
 					name="descrizione" placeholder="Descrizione" required /> <input
 					class="auth-input" type="number" step="0.01" name="costo"
-					placeholder="Costo" required /> <input class="auth-input"
-					type="text" name="sesso" placeholder="Sesso (u/d)" required /> <input
-					class="auth-input" type="text" name="immagine"
-					placeholder="Immagine" required /> <input class="auth-input"
-					type="text" name="categoria" placeholder="Categoria" required />
+					placeholder="Costo" required /> <select class="auth-input"
+					name="sesso" required style="margin-bottom: 15px;">
+					<option value="">Seleziona sesso</option>
+					<option value="Uomo">Uomo</option>
+					<option value="Donna">Donna</option>
+				</select> <input class="auth-input" type="file" name="immagine"
+					placeholder="Immagine" accept="image/*" required /> <input
+					class="auth-input" type="text" name="categoria"
+					placeholder="Categoria" required />
 				<button class="auth-button secondary" type="submit">Aggiungi
 					Prodotto</button>
 			</form>

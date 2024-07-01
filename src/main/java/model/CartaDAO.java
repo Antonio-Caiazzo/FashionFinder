@@ -39,7 +39,6 @@ public class CartaDAO implements BeanDAO<Carta, String> {
 			if (connection != null) {
 				connection.rollback(); // Rollback the transaction on error
 			}
-			System.out.println("Errore SQL durante l'inserimento della carta: " + e.getMessage());
 			throw e;
 		} finally {
 			try {
@@ -47,7 +46,6 @@ public class CartaDAO implements BeanDAO<Carta, String> {
 					statement.close();
 				}
 			} catch (SQLException e) {
-				System.out.println("Errore durante la chiusura dello Statement: " + e.getMessage());
 			}
 			DriverManagerConnectionPool.releaseConnection(connection);
 		}
@@ -78,7 +76,7 @@ public class CartaDAO implements BeanDAO<Carta, String> {
 			if (connection != null) {
 				connection.rollback(); // Rollback the transaction on error
 			}
-			System.out.println("Errore SQL durante l'aggiornamento della carta: " + e.getMessage());
+		
 			throw e;
 		} finally {
 			try {
@@ -86,7 +84,6 @@ public class CartaDAO implements BeanDAO<Carta, String> {
 					statement.close();
 				}
 			} catch (SQLException e) {
-				System.out.println("Errore durante la chiusura dello Statement: " + e.getMessage());
 			}
 			DriverManagerConnectionPool.releaseConnection(connection);
 		}

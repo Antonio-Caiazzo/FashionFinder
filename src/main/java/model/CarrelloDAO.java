@@ -46,8 +46,7 @@ public class CarrelloDAO {
 					}
 				}
 			}
-		} catch (SQLException e) {
-			e.printStackTrace();
+		} catch (SQLException e) {;
 		}
 		return cart;
 	}

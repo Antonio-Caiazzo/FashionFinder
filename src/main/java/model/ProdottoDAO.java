@@ -236,7 +236,7 @@ public class ProdottoDAO implements BeanDAO<Prodotto, Integer> {
 
 	// Serve per recuperare tutti i prodotti di una data categoria
 	public Collection<Prodotto> getProdottiByCategoria(String categoria) throws SQLException {
-		String selectSQL = "SELECT * FROM " + NOME_TABELLA + " WHERE categoria = ?";
+		String selectSQL = "SELECT * FROM " + NOME_TABELLA + " WHERE categoria = ? AND isDeleted = FALSE";
 		List<Prodotto> prodotti = new ArrayList<>();
 		Connection connection = null;
 		PreparedStatement statement = null;
@@ -493,5 +493,4 @@ public class ProdottoDAO implements BeanDAO<Prodotto, Integer> {
 		}
 		return prodotti;
 	}
-
 }

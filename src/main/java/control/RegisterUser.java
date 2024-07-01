@@ -54,7 +54,6 @@ public class RegisterUser extends HttpServlet {
 					java.util.Date date = new SimpleDateFormat("yyyy-MM-dd").parse(dataDiNascita);
 					newUser.setdata_di_nascita(new java.sql.Date(date.getTime()));
 				} catch (ParseException e) {
-					e.printStackTrace();
 					throw new ServletException("Error parsing date", e);
 				}
 

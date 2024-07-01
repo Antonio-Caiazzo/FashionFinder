@@ -64,7 +64,7 @@ public class CheckLogin extends HttpServlet {
 				}
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			;
 			redirectedPage = "/login.jsp";
 		}
 
@@ -81,7 +81,6 @@ public class CheckLogin extends HttpServlet {
 		try {
 			md = MessageDigest.getInstance("SHA-512");
 		} catch (Exception e) {
-			e.printStackTrace();
 		}
 		byte[] messageDigest = md.digest(psw.getBytes());
 		BigInteger number = new BigInteger(1, messageDigest);
