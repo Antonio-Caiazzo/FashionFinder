@@ -14,13 +14,9 @@ public class ProdottoDAO implements BeanDAO<Prodotto, Integer> {
 
 	@Override
 	public void doSave(Prodotto prodotto) throws SQLException {
-		String insertSQL = "INSERT INTO " + NOME_TABELLA
-				+ " (nome, descrizione, costo, sesso, immagine, categoria) VALUES (?, ?, ?, ?, ?, ?)";
-		Connection connection = null;
-		PreparedStatement statement = null;
-		try {
-			connection = DriverManagerConnectionPool.getConnection();
-			statement = connection.prepareStatement(insertSQL);
+		String insertSQL = "INSERT INTO prodotto (nome, descrizione, costo, sesso, immagine, categoria) VALUES (?, ?, ?, ?, ?, ?)";
+		try (Connection connection = DriverManagerConnectionPool.getConnection();
+				PreparedStatement statement = connection.prepareStatement(insertSQL, Statement.RETURN_GENERATED_KEYS)) {
 
 			statement.setString(1, prodotto.getNome());
 			statement.setString(2, prodotto.getDescrizione());
@@ -30,31 +26,41 @@ public class ProdottoDAO implements BeanDAO<Prodotto, Integer> {
 			statement.setString(6, prodotto.getCategoria());
 
 			int rowsAffected = statement.executeUpdate();
-			if (rowsAffected != 1) {
+			if (rowsAffected == 1) {
+				try (ResultSet generatedKeys = statement.getGeneratedKeys()) {
+					if (generatedKeys.next()) {
+						prodotto.setCodice(generatedKeys.getInt(1));
+					}
+				}
+			} else {
 				throw new SQLException("Errore durante l'inserimento di Prodotto, righe aggiornate: " + rowsAffected);
 			}
+			connection.commit();
 		} catch (SQLException e) {
 			System.out.println("Errore SQL durante l'inserimento di Prodotto: " + e.getMessage());
 			throw e;
-		} finally {
-			closeResources(connection, statement, null);
 		}
 	}
 
 	@Override
 	public boolean doDelete(Integer codice) throws SQLException {
-		String deleteSQL = "DELETE FROM " + NOME_TABELLA + " WHERE codice = ?";
+		String updateSQL = "UPDATE " + NOME_TABELLA + " SET isDeleted = ? WHERE codice = ?";
 		Connection connection = null;
 		PreparedStatement statement = null;
 		try {
 			connection = DriverManagerConnectionPool.getConnection();
-			statement = connection.prepareStatement(deleteSQL);
+			statement = connection.prepareStatement(updateSQL);
 
-			statement.setInt(1, codice);
+			statement.setBoolean(1, true);
+			statement.setInt(2, codice);
 
-			int rowsDeleted = statement.executeUpdate();
-			return rowsDeleted > 0;
+			int rowsUpdated = statement.executeUpdate();
+			connection.commit();
+			return rowsUpdated > 0;
 		} catch (SQLException e) {
+			if (connection != null) {
+				connection.rollback();
+			}
 			System.out.println("Errore SQL durante l'eliminazione di Prodotto: " + e.getMessage());
 			throw e;
 		} finally {
@@ -62,42 +68,36 @@ public class ProdottoDAO implements BeanDAO<Prodotto, Integer> {
 		}
 	}
 
-	@Override
 	public Prodotto doRetrieveByKey(Integer codice) throws SQLException {
-		String selectSQL = "SELECT * FROM " + NOME_TABELLA + " WHERE codice = ?";
-		Connection connection = null;
-		PreparedStatement statement = null;
-		ResultSet resultSet = null;
-		try {
-			connection = DriverManagerConnectionPool.getConnection();
-			statement = connection.prepareStatement(selectSQL);
+		String selectSQL = "SELECT * FROM " + NOME_TABELLA + " WHERE codice = ? AND isDeleted = FALSE";
+		try (Connection connection = DriverManagerConnectionPool.getConnection();
+				PreparedStatement statement = connection.prepareStatement(selectSQL)) {
 
 			statement.setInt(1, codice);
-
-			resultSet = statement.executeQuery();
-			if (resultSet.next()) {
-				Prodotto prodotto = new Prodotto();
-				prodotto.setCodice(resultSet.getInt("codice"));
-				prodotto.setNome(resultSet.getString("nome"));
-				prodotto.setDescrizione(resultSet.getString("descrizione"));
-				prodotto.setCosto(resultSet.getDouble("costo"));
-				prodotto.setSesso(resultSet.getString("sesso").charAt(0));
-				prodotto.setImmagine(resultSet.getString("immagine"));
-				prodotto.setCategoria(resultSet.getString("categoria"));
-				return prodotto;
+			try (ResultSet resultSet = statement.executeQuery()) {
+				if (resultSet.next()) {
+					Prodotto prodotto = new Prodotto();
+					prodotto.setCodice(resultSet.getInt("codice"));
+					prodotto.setNome(resultSet.getString("nome"));
+					prodotto.setDescrizione(resultSet.getString("descrizione"));
+					prodotto.setCosto(resultSet.getDouble("costo"));
+					prodotto.setSesso(resultSet.getString("sesso").charAt(0));
+					prodotto.setImmagine(resultSet.getString("immagine"));
+					prodotto.setCategoria(resultSet.getString("categoria"));
+					prodotto.setIsDeleted(resultSet.getBoolean("isDeleted"));
+					return prodotto;
+				}
 			}
 		} catch (SQLException e) {
 			System.out.println("Errore SQL durante il recupero di Prodotto: " + e.getMessage());
 			throw e;
-		} finally {
-			closeResources(connection, statement, resultSet);
 		}
 		return null;
 	}
 
 	@Override
 	public List<Prodotto> doRetrieveAll(String order) throws SQLException {
-		String selectSQL = "SELECT * FROM " + NOME_TABELLA;
+		String selectSQL = "SELECT * FROM " + NOME_TABELLA + " WHERE isDeleted = FALSE";
 		if (order != null && !order.isEmpty()) {
 			selectSQL += " ORDER BY " + order;
 		}
@@ -129,6 +129,85 @@ public class ProdottoDAO implements BeanDAO<Prodotto, Integer> {
 			closeResources(connection, statement, resultSet);
 		}
 		return prodotti;
+	}
+
+	public void eliminaLogicamente(int codice) throws SQLException {
+		String updateSQL = "UPDATE prodotto SET isDeleted = TRUE WHERE codice = ?";
+		try (Connection connection = DriverManagerConnectionPool.getConnection();
+				PreparedStatement statement = connection.prepareStatement(updateSQL)) {
+			statement.setInt(1, codice);
+			int rowsUpdated = statement.executeUpdate();
+			if (rowsUpdated != 1) {
+				throw new SQLException("Errore durante l'eliminazione logica del prodotto");
+			}
+			connection.commit();
+		} catch (SQLException e) {
+			System.out.println("Errore SQL durante l'eliminazione logica di Prodotto: " + e.getMessage());
+			throw e;
+		}
+	}
+
+	public List<Prodotto> doRetrieveAllNonDeleted(String order) throws SQLException {
+		String selectSQL = "SELECT * FROM " + NOME_TABELLA + " WHERE isDeleted = FALSE";
+		if (order != null && !order.isEmpty()) {
+			selectSQL += " ORDER BY " + order;
+		}
+
+		List<Prodotto> prodotti = new ArrayList<>();
+		Connection connection = null;
+		PreparedStatement statement = null;
+		ResultSet resultSet = null;
+		try {
+			connection = DriverManagerConnectionPool.getConnection();
+			statement = connection.prepareStatement(selectSQL);
+			resultSet = statement.executeQuery();
+
+			while (resultSet.next()) {
+				Prodotto prodotto = new Prodotto();
+				prodotto.setCodice(resultSet.getInt("codice"));
+				prodotto.setNome(resultSet.getString("nome"));
+				prodotto.setDescrizione(resultSet.getString("descrizione"));
+				prodotto.setCosto(resultSet.getDouble("costo"));
+				prodotto.setSesso(resultSet.getString("sesso").charAt(0));
+				prodotto.setImmagine(resultSet.getString("immagine"));
+				prodotto.setCategoria(resultSet.getString("categoria"));
+				prodotto.setIsDeleted(resultSet.getBoolean("isDeleted"));
+				prodotti.add(prodotto);
+			}
+		} catch (SQLException e) {
+			System.out.println("Errore SQL durante il recupero di tutti gli oggetti Prodotto: " + e.getMessage());
+			throw e;
+		} finally {
+			closeResources(connection, statement, resultSet);
+		}
+		return prodotti;
+	}
+
+	public Prodotto doRetrieveByKeyEvenIfDeleted(Integer codice) throws SQLException {
+		String selectSQL = "SELECT * FROM " + NOME_TABELLA + " WHERE codice = ?";
+		try (Connection connection = DriverManagerConnectionPool.getConnection();
+				PreparedStatement statement = connection.prepareStatement(selectSQL)) {
+
+			statement.setInt(1, codice);
+			try (ResultSet resultSet = statement.executeQuery()) {
+				if (resultSet.next()) {
+					Prodotto prodotto = new Prodotto();
+					prodotto.setCodice(resultSet.getInt("codice"));
+					prodotto.setNome(resultSet.getString("nome"));
+					prodotto.setDescrizione(resultSet.getString("descrizione"));
+					prodotto.setCosto(resultSet.getDouble("costo"));
+					prodotto.setSesso(resultSet.getString("sesso").charAt(0));
+					prodotto.setImmagine(resultSet.getString("immagine"));
+					prodotto.setCategoria(resultSet.getString("categoria"));
+					prodotto.setIsDeleted(resultSet.getBoolean("isDeleted"));
+					return prodotto;
+				}
+			}
+		} catch (SQLException e) {
+			System.out.println("Errore SQL durante il recupero di Prodotto: " + e.getMessage());
+			throw e;
+		}
+		return null;
 	}
 
 	private void closeResources(Connection connection, PreparedStatement statement, ResultSet resultSet) {
@@ -261,8 +340,8 @@ public class ProdottoDAO implements BeanDAO<Prodotto, Integer> {
 		return prodotti;
 	}
 
-	public Collection<Prodotto> getProdottiBySesso(char sesso) throws SQLException {
-		String selectSQL = "SELECT * FROM prodotto WHERE sesso = ?";
+	public Collection<Prodotto> getProdottiBySessoNonDeleted(char sesso) throws SQLException {
+		String selectSQL = "SELECT * FROM prodotto WHERE sesso = ? AND isDeleted = FALSE";
 		List<Prodotto> prodotti = new ArrayList<>();
 		Connection connection = null;
 		PreparedStatement statement = null;
@@ -283,28 +362,40 @@ public class ProdottoDAO implements BeanDAO<Prodotto, Integer> {
 				prodotto.setSesso(resultSet.getString("sesso").charAt(0));
 				prodotto.setImmagine(resultSet.getString("immagine"));
 				prodotto.setCategoria(resultSet.getString("categoria"));
+				prodotto.setIsDeleted(resultSet.getBoolean("isDeleted"));
 				prodotti.add(prodotto);
 			}
 		} catch (SQLException e) {
 			System.out.println("Errore SQL durante il recupero dei prodotti per sesso: " + e.getMessage());
 			throw e;
 		} finally {
-			try {
-				if (resultSet != null)
+			if (resultSet != null) {
+				try {
 					resultSet.close();
-				if (statement != null)
+				} catch (SQLException e) {
+					System.out.println("Errore durante la chiusura del ResultSet: " + e.getMessage());
+				}
+			}
+			if (statement != null) {
+				try {
 					statement.close();
-				if (connection != null)
-					DriverManagerConnectionPool.releaseConnection(connection);
-			} catch (SQLException e) {
-				e.printStackTrace();
+				} catch (SQLException e) {
+					System.out.println("Errore durante la chiusura dello Statement: " + e.getMessage());
+				}
+			}
+			if (connection != null) {
+				try {
+					connection.close();
+				} catch (SQLException e) {
+					System.out.println("Errore durante la chiusura della connessione: " + e.getMessage());
+				}
 			}
 		}
 		return prodotti;
 	}
 
-	public Collection<Prodotto> getPrimiSeiProdottiBySesso(char sesso) throws SQLException {
-		String selectSQL = "SELECT * FROM prodotto WHERE sesso = ? LIMIT 6";
+	public List<Prodotto> getPrimiSeiProdottiBySessoNonDeleted(char sesso) throws SQLException {
+		String selectSQL = "SELECT * FROM prodotto WHERE sesso = ? AND isDeleted = FALSE LIMIT 6";
 		List<Prodotto> prodotti = new ArrayList<>();
 		Connection connection = null;
 		PreparedStatement statement = null;
@@ -325,6 +416,7 @@ public class ProdottoDAO implements BeanDAO<Prodotto, Integer> {
 				prodotto.setSesso(resultSet.getString("sesso").charAt(0));
 				prodotto.setImmagine(resultSet.getString("immagine"));
 				prodotto.setCategoria(resultSet.getString("categoria"));
+				prodotto.setIsDeleted(resultSet.getBoolean("isDeleted"));
 				prodotti.add(prodotto);
 			}
 		} catch (SQLException e) {
@@ -378,7 +470,7 @@ public class ProdottoDAO implements BeanDAO<Prodotto, Integer> {
 	public List<Prodotto> searchProductsByName(String name) {
 		List<Prodotto> prodotti = new ArrayList<>();
 		try (Connection connection = DriverManagerConnectionPool.getConnection()) {
-			String query = "SELECT * FROM prodotto WHERE nome LIKE ?";
+			String query = "SELECT * FROM prodotto WHERE nome LIKE ? AND isDeleted = FALSE";
 			try (PreparedStatement ps = connection.prepareStatement(query)) {
 				ps.setString(1, "%" + name + "%");
 				try (ResultSet rs = ps.executeQuery()) {
@@ -391,6 +483,7 @@ public class ProdottoDAO implements BeanDAO<Prodotto, Integer> {
 						prodotto.setSesso(rs.getString("sesso").charAt(0));
 						prodotto.setImmagine(rs.getString("immagine"));
 						prodotto.setCategoria(rs.getString("categoria"));
+						prodotto.setIsDeleted(rs.getBoolean("isDeleted"));
 						prodotti.add(prodotto);
 					}
 				}
@@ -400,4 +493,5 @@ public class ProdottoDAO implements BeanDAO<Prodotto, Integer> {
 		}
 		return prodotti;
 	}
+
 }

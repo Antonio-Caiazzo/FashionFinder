@@ -1,5 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
-	pageEncoding="UTF-8"%>
+	pageEncoding="UTF-8"
+	import="model.*, java.util.*, java.sql.SQLException"%>
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -10,17 +12,27 @@
 <body>
 	<%@ include file="./layout/navbar.jsp"%>
 	<div class="main-content-container">
-		<div class="oridini-container">
+		<div class="ordini-container">
 			<div class="ordini-column">
 				<div class="ordini-column-title">Cerca per data</div>
-				dal: <input type="date" /> al: <input type="date" />
-				<button class="secondary">cerca</button>
+				<form action="RicercaOrdiniServlet" method="post">
+					<input type="hidden" name="action" value="data"> dal: <input
+						type="date" name="fromDate" /> <br> <br> al: <input
+						type="date" name="toDate" /><br>
+					<br>
+					<button type="submit" class="secondary">Cerca</button>
+				</form>
 			</div>
-
+			<br>
 			<div class="ordini-column">
 				<div class="ordini-column-title">Cerca per nominativi</div>
-				nome: <input type="text" /> cognome: <input type="text" />
-				<button class="secondary">cerca</button>
+				<form action="RicercaOrdiniServlet" method="post">
+					<input type="hidden" name="action" value="nominativi">
+					nome: <input type="text" name="nome" /><br> <br>
+					cognome: <input type="text" name="cognome" /> <br>
+					<br>
+					<button type="submit" class="secondary">Cerca</button>
+				</form>
 			</div>
 		</div>
 		<table>
@@ -34,21 +46,31 @@
 				</tr>
 			</thead>
 			<tbody>
+				<%
+				@SuppressWarnings("unchecked")
+				List<Ordine> ordini = (List<Ordine>) request.getAttribute("ordini");
+				if (ordini != null) {
+					for (Ordine ordine : ordini) {
+				%>
 				<tr>
-					<td data-label="Id">Visa - 3412</td>
-					<td data-label="Data">04/01/2016</td>
-					<td data-label="Importo Totale">$1,190</td>
-					<td data-label="Dettagli"><a href="">dettagli</a></td>
+					<td data-label="Id"><%=ordine.getCodice()%></td>
+					<td data-label="Data"><%=ordine.getData()%></td>
+					<td data-label="Importo totale"><%=ordine.getCostoTotale()%></td>
+					<td data-label="Dettagli"><a
+						href="OrdineDettagliServlet?ordineId=<%=ordine.getCodice()%>">dettagli</a></td>
 				</tr>
+				<%
+				}
+				} else {
+				%>
 				<tr>
-					<td data-label="Id">Visa - 3412</td>
-					<td data-label="Data">04/01/2016</td>
-					<td data-label="Importo Totale">$1,190</td>
-					<td data-label="Dettagli"><a href="">dettagli</a></td>
+					<td colspan="4">Nessun ordine trovato</td>
 				</tr>
+				<%
+				}
+				%>
 			</tbody>
 		</table>
-
 
 		<%@ include file="./layout/footer.jsp"%>
 	</div>

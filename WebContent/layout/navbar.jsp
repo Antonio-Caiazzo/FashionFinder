@@ -29,7 +29,8 @@
 			<form>
 				<div class="input-box">
 					<input type="text" id="search-input"
-						placeholder="Cerca prodotto..." onkeyup="loadDoc()" /> <span
+						placeholder="Cerca prodotto..." onkeyup="loadDoc()"
+						data-context-path="${pageContext.request.contextPath}" /> <span
 						class="search" onclick="openSearch()"> <i
 						class="uil uil-search search-icon"></i>
 					</span> <i class="uil uil-times close-icon" onclick="closeSearch()"></i>
@@ -88,12 +89,13 @@
 function loadDoc() {
     const xhttp = new XMLHttpRequest();
     const query = document.getElementById("search-input").value;
+    const contextPath = document.getElementById("search-input").getAttribute('data-context-path');
     if (query.length > 0) {
         xhttp.onload = function() {
             document.getElementById("search-results").innerHTML = this.responseText;
             attachClickEvent();
         }
-        xhttp.open("GET", "search.jsp?query=" + query, true);
+        xhttp.open("GET", contextPath + "/search.jsp?query=" + query, true);
         xhttp.send();
     } else {
         document.getElementById("search-results").innerHTML = "";
@@ -105,7 +107,7 @@ function attachClickEvent() {
     items.forEach(item => {
         item.addEventListener('click', () => {
             const productId = item.getAttribute('data-id');
-            const contextPath = '<%=request.getContextPath()%>';
+            const contextPath = document.getElementById('search-input').getAttribute('data-context-path');
             window.location.href = contextPath + '/dettagliProdotto?codice=' + productId;
         });
     });

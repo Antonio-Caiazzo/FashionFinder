@@ -24,6 +24,11 @@ public class AggiungiProdottoServlet extends HttpServlet {
 		String immagine = request.getParameter("immagine");
 		String categoria = request.getParameter("categoria");
 
+		if (sesso != 'u' && sesso != 'd') {
+			response.sendRedirect("errorPage.jsp");
+			return;
+		}
+
 		Prodotto prodotto = new Prodotto();
 		prodotto.setNome(nome);
 		prodotto.setDescrizione(descrizione);
@@ -37,6 +42,7 @@ public class AggiungiProdottoServlet extends HttpServlet {
 			prodottoDAO.doSave(prodotto);
 			response.sendRedirect("gestioneCatalogo.jsp");
 		} catch (SQLException e) {
+			e.printStackTrace();
 			response.sendRedirect("errorPage.jsp");
 		}
 	}

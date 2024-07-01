@@ -18,10 +18,6 @@ import model.OrdineDAO;
 public class OrdineDettagliServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
-	public OrdineDettagliServlet() {
-		super();
-	}
-
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		int ordineId = Integer.parseInt(request.getParameter("ordineId"));
@@ -30,10 +26,12 @@ public class OrdineDettagliServlet extends HttpServlet {
 		try {
 			Ordine ordine = ordineDAO.doRetrieveByKey(ordineId);
 			List<Contiene> contieneList = contieneDAO.doRetrieveByOrdine(ordineId);
+
 			request.setAttribute("ordine", ordine);
 			request.setAttribute("contieneList", contieneList);
 			request.getRequestDispatcher("/ordineDettagli.jsp").forward(request, response);
 		} catch (SQLException e) {
+			e.printStackTrace();
 			response.sendRedirect(request.getContextPath() + "/errorPage.jsp");
 		}
 	}
