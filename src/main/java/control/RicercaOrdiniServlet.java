@@ -45,7 +45,6 @@ public class RicercaOrdiniServlet extends HttpServlet {
 			request.setAttribute("ordini", ordini);
 			request.getRequestDispatcher("/ordiniAdmin.jsp").forward(request, response);
 		} catch (SQLException e) {
-			e.printStackTrace();
 			response.sendRedirect(request.getContextPath() + "/errorPage.jsp");
 		}
 	}

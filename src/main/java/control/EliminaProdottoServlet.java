@@ -23,7 +23,6 @@ public class EliminaProdottoServlet extends HttpServlet {
 			prodottoDAO.eliminaLogicamente(prodottoId);
 			response.sendRedirect("gestioneCatalogo.jsp");
 		} catch (SQLException e) {
-			e.printStackTrace();
 			response.sendRedirect("errorPage.jsp");
 		}
 	}

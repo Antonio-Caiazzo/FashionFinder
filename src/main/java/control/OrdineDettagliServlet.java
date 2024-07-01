@@ -31,7 +31,6 @@ public class OrdineDettagliServlet extends HttpServlet {
 			request.setAttribute("contieneList", contieneList);
 			request.getRequestDispatcher("/ordineDettagli.jsp").forward(request, response);
 		} catch (SQLException e) {
-			e.printStackTrace();
 			response.sendRedirect(request.getContextPath() + "/errorPage.jsp");
 		}
 	}

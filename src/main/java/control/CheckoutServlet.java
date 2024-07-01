@@ -73,7 +73,6 @@ public class CheckoutServlet extends HttpServlet {
                 indirizzoDAO.updateIndirizzo(indirizzo);
             }
         } catch (SQLException e) {
-            e.printStackTrace();
             response.sendRedirect(request.getContextPath() + "/errorPage.jsp");
             return;
         }
@@ -98,7 +97,6 @@ public class CheckoutServlet extends HttpServlet {
                 cartaDAO.updateCarta(carta);
             }
         } catch (SQLException e) {
-            e.printStackTrace();
             response.sendRedirect(request.getContextPath() + "/errorPage.jsp");
             return;
         }
@@ -111,7 +109,6 @@ public class CheckoutServlet extends HttpServlet {
             try {
                 prodotto = prodottoDAO.doRetrieveByKey(codice);
             } catch (SQLException e) {
-                e.printStackTrace();
             }
             if (prodotto != null) {
                 totalCost += prodotto.getCosto() * quantity;
@@ -144,7 +141,6 @@ public class CheckoutServlet extends HttpServlet {
             carrelloDAO.clearCart(userRegistrato.getEmail());
             request.getSession().removeAttribute("cart");
         } catch (SQLException e) {
-            e.printStackTrace();
             response.sendRedirect(request.getContextPath() + "/errorPage.jsp");
             return;
         }

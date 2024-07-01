@@ -66,7 +66,6 @@ public class CarrelloServlet extends HttpServlet {
 					carrelloDAO.removeCartItem(userRegistrato.getEmail(), codice);
 				} catch (SQLException e) {
 					// TODO Auto-generated catch block
-					e.printStackTrace();
 				}
 			} else {
 				for (Map.Entry<Integer, Integer> entry : cart.entrySet()) {
@@ -74,7 +73,6 @@ public class CarrelloServlet extends HttpServlet {
 						carrelloDAO.addOrUpdateCartItem(userRegistrato.getEmail(), entry.getKey(), entry.getValue());
 					} catch (SQLException e) {
 						// TODO Auto-generated catch block
-						e.printStackTrace();
 					}
 				}
 			}
