@@ -45,20 +45,20 @@
 					value="<%=userRegistrato != null ? userRegistrato.getCognome() : ""%>"
 					required /> <input class="auth-input" type="text" name="cap"
 					placeholder="CAP"
-					value="<%=indirizzo != null ? indirizzo.getCap() : ""%>" required />
-				<input class="auth-input" type="text" name="citta"
-					placeholder="Città"
+					value="<%=indirizzo != null ? indirizzo.getCap() : ""%>" required
+					pattern="\d+" title="Inserisci solo numeri" /> <input
+					class="auth-input" type="text" name="citta" placeholder="Città"
 					value="<%=indirizzo != null ? indirizzo.getCitta() : ""%>" required />
 				<input class="auth-input" type="text" name="provincia"
 					placeholder="Provincia"
 					value="<%=indirizzo != null ? indirizzo.getProvincia() : ""%>"
-					required /> <input class="auth-input" type="text" name="via"
-					placeholder="Via"
+					required onblur="this.value = this.value.toUpperCase()" /> <input
+					class="auth-input" type="text" name="via" placeholder="Via"
 					value="<%=indirizzo != null ? indirizzo.getVia() : ""%>" required />
 				<input class="auth-input" type="text" name="civico"
 					placeholder="Civico"
 					value="<%=indirizzo != null ? indirizzo.getCivico() : ""%>"
-					required />
+					required pattern="\d+" title="Inserisci solo numeri" />
 
 				<div class="auth-container-header-text">Dati di pagamento</div>
 				<input class="auth-input" type="text" name="titolare"
@@ -69,8 +69,9 @@
 					value="<%=carta != null ? carta.getCognomeTitolare() : ""%>"
 					required /> <input class="auth-input" type="text"
 					name="numeroCarta" placeholder="Numero Carta"
-					value="<%=carta != null ? carta.getNumeroCarta() : ""%>" required />
-				<input class="auth-input" type="date" name="scadenza"
+					value="<%=carta != null ? carta.getNumeroCarta() : ""%>" required
+					pattern="\d+" title="Inserisci solo numeri" /> <input
+					class="auth-input" type="date" name="scadenza"
 					placeholder="Scadenza"
 					value="<%=carta != null ? carta.getScadenzaCarta() : ""%>" required />
 
@@ -80,6 +81,5 @@
 		</div>
 		<%@ include file="./layout/footer.jsp"%>
 	</div>
-
 </body>
 </html>

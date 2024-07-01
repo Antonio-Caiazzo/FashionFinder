@@ -489,7 +489,6 @@ public class ProdottoDAO implements BeanDAO<Prodotto, Integer> {
 				}
 			}
 		} catch (SQLException e) {
-			e.printStackTrace();
 		}
 		return prodotti;
 	}

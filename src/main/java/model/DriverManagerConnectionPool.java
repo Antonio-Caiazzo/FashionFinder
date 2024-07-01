@@ -8,35 +8,36 @@ import java.util.List;
 
 public class DriverManagerConnectionPool {
 	private static List<Connection> freeDbConnections;
-	
+
 	static {
 		freeDbConnections = new LinkedList<Connection>();
-		
+
 		try {
 			Class.forName("com.mysql.cj.jdbc.Driver");
-		}
-		catch (ClassNotFoundException e) {
-			e.printStackTrace();
+		} catch (ClassNotFoundException e) {
+
 		}
 	}
-	
+
 	private static Connection createDBConnection() throws SQLException {
 		Connection newConnection = null;
 		String db = "FashionFinder";
 		String username = "root";
 		String password = "root";
 
-		newConnection = DriverManager.getConnection("jdbc:mysql://localhost:3306/"+db + "?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC", username, password);
-		
+		newConnection = DriverManager.getConnection("jdbc:mysql://localhost:3306/" + db
+				+ "?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC",
+				username, password);
+
 		newConnection.setAutoCommit(false);
-		
+
 		return newConnection;
 	}
-	
+
 	public static synchronized Connection getConnection() throws SQLException {
 		Connection connection;
-		
-		if(! freeDbConnections.isEmpty()) {
+
+		if (!freeDbConnections.isEmpty()) {
 			connection = (Connection) freeDbConnections.get(0);
 			DriverManagerConnectionPool.freeDbConnections.remove(0);
 			try {
@@ -46,15 +47,14 @@ public class DriverManagerConnectionPool {
 			} catch (SQLException e) {
 				connection = DriverManagerConnectionPool.getConnection();
 			}
-		}
-		else connection = DriverManagerConnectionPool.createDBConnection();
-		
+		} else
+			connection = DriverManagerConnectionPool.createDBConnection();
+
 		return connection;
 	}
-	
+
 	public static synchronized void releaseConnection(Connection connection) {
 		DriverManagerConnectionPool.freeDbConnections.add(connection);
 	}
-	
-	
+
 }

@@ -45,7 +45,6 @@ public class ContieneDAO implements BeanDAO<Contiene, Integer> {
 			statement.executeUpdate();
 			connection.commit();
 		} catch (SQLException e) {
-			e.printStackTrace();
 			throw new SQLException("Errore SQL durante l'inserimento in contiene: " + e.getMessage());
 		}
 	}

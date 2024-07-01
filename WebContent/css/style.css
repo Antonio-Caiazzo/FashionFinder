@@ -677,3 +677,8 @@ table th {
 .error-message {
 	color: red;
 }
+
+.auth-input:focus {
+	border: 2px solid black;
+	outline: none;
+}
