@@ -14,6 +14,15 @@ import model.ProdottoDAO;
 @WebServlet("/AggiungiProdottoServlet")
 public class AggiungiProdottoServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
+	
+	private String sanitizeInput(String input) {
+		if (input != null) {
+			input = input.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;").replace("\"", "&quot;")
+					.replace("'", "&#x27;");
+		}
+		return input;
+
+    }
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
@@ -30,12 +39,12 @@ public class AggiungiProdottoServlet extends HttpServlet {
 		}
 
 		Prodotto prodotto = new Prodotto();
-		prodotto.setNome(nome);
-		prodotto.setDescrizione(descrizione);
+		prodotto.setNome(sanitizeInput(nome));
+		prodotto.setDescrizione(sanitizeInput(descrizione));
 		prodotto.setCosto(costo);
 		prodotto.setSesso(sesso);
-		prodotto.setImmagine(immagine);
-		prodotto.setCategoria(categoria);
+		prodotto.setImmagine(sanitizeInput(immagine));
+		prodotto.setCategoria(sanitizeInput(categoria));
 
 		ProdottoDAO prodottoDAO = new ProdottoDAO();
 		try {
