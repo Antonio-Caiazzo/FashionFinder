@@ -22,7 +22,7 @@ import model.ProdottoDAO;
 public class ModificaProdottoServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
-	private String sanitize(String input) {
+	private String sanitizeInput(String input) {
 		if (input != null) {
 			input = input.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;").replace("\"", "&quot;")
 					.replace("'", "&#x27;");
@@ -39,12 +39,12 @@ public class ModificaProdottoServlet extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		int codice = Integer.parseInt(request.getParameter("codice"));
-		String nome = sanitize(request.getParameter("nome"));
-		String descrizione = sanitize(request.getParameter("descrizione"));
+		String nome = sanitizeInput(request.getParameter("nome"));
+		String descrizione = sanitizeInput(request.getParameter("descrizione"));
 		double costo = Double.parseDouble(request.getParameter("costo"));
 		String sesso = request.getParameter("sesso");
-		String immagine = sanitize(request.getParameter("currentImmagine"));
-		String categoria = sanitize(request.getParameter("categoria"));
+		String immagine = sanitizeInput(request.getParameter("currentImmagine"));
+		String categoria = sanitizeInput(request.getParameter("categoria"));
 
 		if (costo < 0) {
 			request.setAttribute("errorMessage", "Il costo non può essere negativo.");

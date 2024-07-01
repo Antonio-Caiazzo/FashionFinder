@@ -94,19 +94,18 @@ public class AggiungiProdottoServlet extends HttpServlet {
 		String relativeFileName = sanitizedFileName;
 
 		Prodotto prodotto = new Prodotto();
-		prodotto.setNome(nome);
-		prodotto.setDescrizione(descrizione);
+		prodotto.setNome(sanitize(nome));
+		prodotto.setDescrizione(sanitize(descrizione));
 		prodotto.setCosto(costo);
 		prodotto.setSesso(sesso.charAt(0));
 		prodotto.setImmagine(relativeFileName);
-		prodotto.setCategoria(categoria);
+		prodotto.setCategoria(sanitize(categoria));
 
 		ProdottoDAO prodottoDAO = new ProdottoDAO();
 		try {
 			prodottoDAO.doSave(prodotto);
 			response.sendRedirect("gestioneCatalogo.jsp");
 		} catch (SQLException e) {
-			e.printStackTrace();
 			request.setAttribute("errorMessage", "Errore durante il salvataggio del prodotto.");
 			request.getRequestDispatcher("/aggiungiProdotto.jsp").forward(request, response);
 		}
