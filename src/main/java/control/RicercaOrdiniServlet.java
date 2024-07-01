@@ -31,9 +31,11 @@ public class RicercaOrdiniServlet extends HttpServlet {
 			if ("data".equals(action)) {
 				String fromDateStr = request.getParameter("fromDate");
 				String toDateStr = request.getParameter("toDate");
-				Date fromDate = Date.valueOf(fromDateStr);
-				Date toDate = Date.valueOf(toDateStr);
-				ordini = ordineDAO.doRetrieveByDateRange(fromDate, toDate);
+				if (fromDateStr != null && !fromDateStr.isEmpty() && toDateStr != null && !toDateStr.isEmpty()) {
+					Date fromDate = Date.valueOf(fromDateStr);
+					Date toDate = Date.valueOf(toDateStr);
+					ordini = ordineDAO.doRetrieveByDateRange(fromDate, toDate);
+				}
 			} else if ("nominativi".equals(action)) {
 				String nome = request.getParameter("nome");
 				String cognome = request.getParameter("cognome");

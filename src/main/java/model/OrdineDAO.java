@@ -253,13 +253,27 @@ public class OrdineDAO implements BeanDAO<Ordine, Integer> {
 	}
 
 	public List<Ordine> doRetrieveByNomeCognome(String nome, String cognome) throws SQLException {
-		String selectSQL = "SELECT o.* FROM " + NOME_TABELLA
-				+ " o JOIN utente u ON o.utente_email = u.email WHERE u.nome = ? AND u.cognome = ?";
+		String selectSQL = "SELECT o.* FROM " + NOME_TABELLA + " o JOIN utente u ON o.utente_email = u.email WHERE 1=1";
 		List<Ordine> ordini = new ArrayList<>();
+
+		if (nome != null && !nome.trim().isEmpty()) {
+			selectSQL += " AND LOWER(u.nome) LIKE LOWER(?)";
+		}
+		if (cognome != null && !cognome.trim().isEmpty()) {
+			selectSQL += " AND LOWER(u.cognome) LIKE LOWER(?)";
+		}
+
 		try (Connection connection = DriverManagerConnectionPool.getConnection();
 				PreparedStatement ps = connection.prepareStatement(selectSQL)) {
-			ps.setString(1, nome);
-			ps.setString(2, cognome);
+
+			int parameterIndex = 1;
+			if (nome != null && !nome.trim().isEmpty()) {
+				ps.setString(parameterIndex++, "%" + nome + "%");
+			}
+			if (cognome != null && !cognome.trim().isEmpty()) {
+				ps.setString(parameterIndex++, "%" + cognome + "%");
+			}
+
 			try (ResultSet rs = ps.executeQuery()) {
 				while (rs.next()) {
 					Ordine ordine = new Ordine();
@@ -273,4 +287,5 @@ public class OrdineDAO implements BeanDAO<Ordine, Integer> {
 		}
 		return ordini;
 	}
+
 }
