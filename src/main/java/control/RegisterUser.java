@@ -7,13 +7,16 @@ import java.security.NoSuchAlgorithmException;
 import java.sql.SQLException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Map;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
 import model.Utente;
 import model.UtenteDAO;
+import model.CarrelloDAO;
 
 @WebServlet("/RegisterUser")
 public class RegisterUser extends HttpServlet {
@@ -21,11 +24,6 @@ public class RegisterUser extends HttpServlet {
 
 	public RegisterUser() {
 		super();
-	}
-
-	protected void doGet(HttpServletRequest request, HttpServletResponse response)
-			throws ServletException, IOException {
-		response.getWriter().append("Served at: ").append(request.getContextPath());
 	}
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
@@ -59,9 +57,17 @@ public class RegisterUser extends HttpServlet {
 
 				newUser.setIsAdmin(false);
 
-
 				utenteDAO.doSave(newUser);
 				request.getSession().setAttribute("userRegistrato", newUser);
+
+				@SuppressWarnings("unchecked")
+				Map<Integer, Integer> sessionCart = (Map<Integer, Integer>) request.getSession().getAttribute("cart");
+				if (sessionCart != null) {
+					CarrelloDAO carrelloDAO = new CarrelloDAO();
+					for (Map.Entry<Integer, Integer> entry : sessionCart.entrySet()) {
+						carrelloDAO.addOrUpdateCartItem(email, entry.getKey(), entry.getValue());
+					}
+				}
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();

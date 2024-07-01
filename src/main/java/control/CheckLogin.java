@@ -23,11 +23,6 @@ public class CheckLogin extends HttpServlet {
 		super();
 	}
 
-	protected void doGet(HttpServletRequest request, HttpServletResponse response)
-			throws ServletException, IOException {
-		response.getWriter().append("Served at: ").append(request.getContextPath());
-	}
-
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		String email = request.getParameter("email");
@@ -48,7 +43,6 @@ public class CheckLogin extends HttpServlet {
 					request.getSession().setAttribute("email", userRegistrato.getEmail());
 					request.getSession().setAttribute("username", userRegistrato.getUsername());
 
-					// Sincronizzazione del carrello
 					@SuppressWarnings("unchecked")
 					Map<Integer, Integer> sessionCart = (Map<Integer, Integer>) request.getSession()
 							.getAttribute("cart");

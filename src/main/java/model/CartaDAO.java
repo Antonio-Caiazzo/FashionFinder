@@ -34,10 +34,10 @@ public class CartaDAO implements BeanDAO<Carta, String> {
 			if (rowsAffected != 1) {
 				throw new SQLException("Errore durante l'inserimento della carta");
 			}
-			connection.commit(); // Commit the transaction
+			connection.commit(); 
 		} catch (SQLException e) {
 			if (connection != null) {
-				connection.rollback(); // Rollback the transaction on error
+				connection.rollback(); 
 			}
 			throw e;
 		} finally {
@@ -71,10 +71,10 @@ public class CartaDAO implements BeanDAO<Carta, String> {
 			if (rowsUpdated != 1) {
 				throw new SQLException("Errore durante l'aggiornamento della carta");
 			}
-			connection.commit(); // Commit the transaction
+			connection.commit(); 
 		} catch (SQLException e) {
 			if (connection != null) {
-				connection.rollback(); // Rollback the transaction on error
+				connection.rollback(); 
 			}
 		
 			throw e;
