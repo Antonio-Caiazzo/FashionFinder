@@ -8,6 +8,7 @@ public class Prodotto {
 	private char sesso;
 	private String immagine;
 	private String categoria;
+	private Boolean isDeleted;
 
 	public Prodotto() {
 		this.codice = 0;
@@ -73,5 +74,13 @@ public class Prodotto {
 
 	public void setCategoria(String categoria) {
 		this.categoria = categoria;
+	}
+
+	public Boolean getIsDeleted() {
+		return isDeleted;
+	}
+
+	public void setIsDeleted(Boolean isDeleted) {
+		this.isDeleted = isDeleted;
 	}
 }

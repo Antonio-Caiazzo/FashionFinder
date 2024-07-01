@@ -23,7 +23,7 @@
 		<div class="product-card-container-dashboard">
 			<%
 			ProdottoDAO prodottoDAO = new ProdottoDAO();
-			Collection<Prodotto> prodottiUomo = prodottoDAO.getPrimiSeiProdottiBySesso('u');
+			Collection<Prodotto> prodottiUomo = prodottoDAO.getPrimiSeiProdottiBySessoNonDeleted('u');
 			for (Prodotto prodotto : prodottiUomo) {
 			%>
 			<div class="product-card">
@@ -53,7 +53,7 @@
 		</div>
 		<div class="product-card-container-dashboard">
 			<%
-			Collection<Prodotto> prodottiDonna = prodottoDAO.getPrimiSeiProdottiBySesso('d');
+			Collection<Prodotto> prodottiDonna = prodottoDAO.getPrimiSeiProdottiBySessoNonDeleted('d');
 			for (Prodotto prodotto : prodottiDonna) {
 			%>
 			<div class="product-card">
@@ -78,6 +78,6 @@
 
 		<%@ include file="./layout/footer.jsp"%>
 	</div>
-	
+
 </body>
 </html>

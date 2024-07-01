@@ -6,7 +6,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>FashionFinder - Uomo</title>
+<title>FashionFinder - Donna</title>
 <link href="css/style.css" rel="stylesheet" type="text/css">
 </head>
 <body>
@@ -15,12 +15,9 @@
 		<%@ include file="./layout/pageTitle.jsp"%>
 		<div class="product-card-container">
 			<%
-			Object prodottiObject = request.getAttribute("prodotti");
-			if (prodottiObject instanceof Collection) {
-				Collection<?> prodotti = (Collection<?>) prodottiObject;
-				for (Object obj : prodotti) {
-					if (obj instanceof Prodotto) {
-				Prodotto prodotto = (Prodotto) obj;
+			ProdottoDAO prodottoDAO = new ProdottoDAO();
+			Collection<Prodotto> prodotti = prodottoDAO.getProdottiBySessoNonDeleted('d');
+			for (Prodotto prodotto : prodotti) {
 			%>
 			<div class="product-card">
 				<div class="product-card-image-container">
@@ -39,10 +36,6 @@
 				</div>
 			</div>
 			<%
-			}
-			}
-			} else {
-			response.sendRedirect("errorPage.jsp");
 			}
 			%>
 		</div>

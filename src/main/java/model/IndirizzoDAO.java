@@ -39,7 +39,11 @@ public class IndirizzoDAO implements BeanDAO<Indirizzo, Integer> {
 			if (rs.next()) {
 				indirizzo.setId(rs.getInt(1));
 			}
+			connection.commit();
 		} catch (SQLException e) {
+			if (connection != null) {
+				connection.rollback();
+			}
 			System.out.println("Errore SQL durante l'inserimento dell'indirizzo: " + e.getMessage());
 			throw e;
 		} finally {
@@ -57,14 +61,83 @@ public class IndirizzoDAO implements BeanDAO<Indirizzo, Integer> {
 			} catch (SQLException e) {
 				System.out.println("Errore durante la chiusura dello Statement: " + e.getMessage());
 			}
+			DriverManagerConnectionPool.releaseConnection(connection);
+		}
+	}
+
+	public synchronized void updateIndirizzo(Indirizzo indirizzo) throws SQLException {
+		String updateSQL = "UPDATE " + NOME_TABELLA
+				+ " SET cap = ?, citta = ?, provincia = ?, via = ?, civico = ?, utente_email = ? WHERE id = ?";
+		Connection connection = null;
+		PreparedStatement statement = null;
+		try {
+			connection = DriverManagerConnectionPool.getConnection();
+			statement = connection.prepareStatement(updateSQL);
+
+			statement.setInt(1, indirizzo.getCap());
+			statement.setString(2, indirizzo.getCitta());
+			statement.setString(3, indirizzo.getProvincia());
+			statement.setString(4, indirizzo.getVia());
+			statement.setInt(5, indirizzo.getCivico());
+			statement.setString(6, indirizzo.getUtenteEmail());
+			statement.setInt(7, indirizzo.getId());
+
+			int rowsUpdated = statement.executeUpdate();
+			if (rowsUpdated != 1) {
+				throw new SQLException(
+						"Errore durante l'aggiornamento dell'indirizzo, righe aggiornate: " + rowsUpdated);
+			}
+			connection.commit();
+		} catch (SQLException e) {
+			if (connection != null) {
+				connection.rollback();
+			}
+			System.out.println("Errore SQL durante l'aggiornamento dell'indirizzo: " + e.getMessage());
+			throw e;
+		} finally {
 			try {
-				if (connection != null) {
-					connection.close();
+				if (statement != null) {
+					statement.close();
 				}
 			} catch (SQLException e) {
-				System.out.println("Errore durante la chiusura della connessione: " + e.getMessage());
+				System.out.println("Errore durante la chiusura dello Statement: " + e.getMessage());
 			}
+			DriverManagerConnectionPool.releaseConnection(connection);
 		}
+	}
+
+	public Indirizzo doRetrieveByDetails(int cap, String citta, String provincia, String via, int civico,
+			String utenteEmail) throws SQLException {
+		String selectSQL = "SELECT * FROM " + NOME_TABELLA
+				+ " WHERE cap = ? AND citta = ? AND provincia = ? AND via = ? AND civico = ? AND utente_email = ?";
+		try (Connection connection = DriverManagerConnectionPool.getConnection();
+				PreparedStatement statement = connection.prepareStatement(selectSQL)) {
+
+			statement.setInt(1, cap);
+			statement.setString(2, citta);
+			statement.setString(3, provincia);
+			statement.setString(4, via);
+			statement.setInt(5, civico);
+			statement.setString(6, utenteEmail);
+
+			try (ResultSet resultSet = statement.executeQuery()) {
+				if (resultSet.next()) {
+					Indirizzo indirizzo = new Indirizzo();
+					indirizzo.setId(resultSet.getInt("id"));
+					indirizzo.setCap(resultSet.getInt("cap"));
+					indirizzo.setCitta(resultSet.getString("citta"));
+					indirizzo.setProvincia(resultSet.getString("provincia"));
+					indirizzo.setVia(resultSet.getString("via"));
+					indirizzo.setCivico(resultSet.getInt("civico"));
+					indirizzo.setUtenteEmail(resultSet.getString("utente_email"));
+					return indirizzo;
+				}
+			}
+		} catch (SQLException e) {
+			System.out.println("Errore SQL durante il recupero dell'indirizzo: " + e.getMessage());
+			throw e;
+		}
+		return null;
 	}
 
 	@Override
@@ -231,48 +304,4 @@ public class IndirizzoDAO implements BeanDAO<Indirizzo, Integer> {
 			}
 		}
 	}
-
-	public synchronized void updateIndirizzo(Indirizzo indirizzo) throws SQLException {
-		String updateSQL = "UPDATE " + NOME_TABELLA
-				+ " SET cap = ?, citta = ?, provincia = ?, via = ?, civico = ?, utente_email = ? WHERE id = ?";
-		Connection connection = null;
-		PreparedStatement statement = null;
-		try {
-			connection = DriverManagerConnectionPool.getConnection();
-			statement = connection.prepareStatement(updateSQL);
-
-			statement.setInt(1, indirizzo.getCap());
-			statement.setString(2, indirizzo.getCitta());
-			statement.setString(3, indirizzo.getProvincia());
-			statement.setString(4, indirizzo.getVia());
-			statement.setInt(5, indirizzo.getCivico());
-			statement.setString(6, indirizzo.getUtenteEmail());
-			statement.setInt(7, indirizzo.getId());
-
-			int rowsUpdated = statement.executeUpdate();
-			if (rowsUpdated != 1) {
-				throw new SQLException(
-						"Errore durante l'aggiornamento dell'indirizzo, righe aggiornate: " + rowsUpdated);
-			}
-		} catch (SQLException e) {
-			System.out.println("Errore SQL durante l'aggiornamento dell'indirizzo: " + e.getMessage());
-			throw e;
-		} finally {
-			try {
-				if (statement != null) {
-					statement.close();
-				}
-			} catch (SQLException e) {
-				System.out.println("Errore durante la chiusura dello Statement: " + e.getMessage());
-			}
-			try {
-				if (connection != null) {
-					connection.close();
-				}
-			} catch (SQLException e) {
-				System.out.println("Errore durante la chiusura della connessione: " + e.getMessage());
-			}
-		}
-	}
-
 }

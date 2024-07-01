@@ -26,7 +26,7 @@
 				ProdottoDAO prodottoDAO = new ProdottoDAO();
 				List<Prodotto> prodotti = null;
 				try {
-					prodotti = prodottoDAO.doRetrieveAll(null);
+					prodotti = (List<Prodotto>) prodottoDAO.doRetrieveAllNonDeleted(null);
 				} catch (SQLException e) {
 					response.sendRedirect("errorPage.jsp");
 				}
@@ -36,10 +36,13 @@
 				<tr>
 					<td scope="row" data-label="Id"><%=prodotto.getCodice()%></td>
 					<td data-label="Nome Prodotto"><%=prodotto.getNome()%></td>
-					<td data-label="Sesso"><%=prodotto.getSesso()%></td>
+					<td data-label="Sesso"><%=prodotto.getSesso() == 'u' ? "Uomo" : "Donna"%></td>
 					<td data-label="Azione"><a
 						href="modificaProdotto.jsp?prodottoId=<%=prodotto.getCodice()%>">
 							<button class="secondary">Modifica</button>
+					</a> <a
+						href="EliminaProdottoServlet?prodottoId=<%=prodotto.getCodice()%>">
+							<button class="danger">Elimina</button>
 					</a></td>
 				</tr>
 				<%

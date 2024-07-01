@@ -14,29 +14,6 @@ public class OrdineDAO implements BeanDAO<Ordine, Integer> {
 	}
 
 	@Override
-	public void doSave(Ordine ordine) throws SQLException {
-		String insertSQL = "INSERT INTO " + NOME_TABELLA + " (data, costo_totale, utente_email) VALUES (?, ?, ?)";
-		try (Connection connection = DriverManagerConnectionPool.getConnection();
-				PreparedStatement statement = connection.prepareStatement(insertSQL, Statement.RETURN_GENERATED_KEYS)) {
-			statement.setDate(1, new java.sql.Date(ordine.getData().getTime()));
-			statement.setDouble(2, ordine.getCostoTotale());
-			statement.setString(3, ordine.getUtenteEmail());
-			statement.executeUpdate();
-
-			try (ResultSet rs = statement.getGeneratedKeys()) {
-				if (rs.next()) {
-					ordine.setCodice(rs.getInt(1));
-				}
-			}
-
-			connection.commit();
-		} catch (SQLException e) {
-			e.printStackTrace();
-			throw new SQLException("Errore nell'inserimento dell'ordine: " + e.getMessage());
-		}
-	}
-
-	@Override
 	public synchronized boolean doDelete(Integer codice) throws SQLException {
 		String deleteSQL = "DELETE FROM " + NOME_TABELLA + " WHERE codice = ?";
 		Connection connection = null;
@@ -231,4 +208,69 @@ public class OrdineDAO implements BeanDAO<Ordine, Integer> {
 		return ordini;
 	}
 
+	@Override
+	public void doSave(Ordine ordine) throws SQLException {
+		String insertSQL = "INSERT INTO ordine (data, costo_totale, utente_email) VALUES (?, ?, ?)";
+		try (Connection connection = DriverManagerConnectionPool.getConnection();
+				PreparedStatement statement = connection.prepareStatement(insertSQL, Statement.RETURN_GENERATED_KEYS)) {
+			statement.setDate(1, new java.sql.Date(ordine.getData().getTime()));
+			statement.setDouble(2, ordine.getCostoTotale());
+			statement.setString(3, ordine.getUtenteEmail());
+			statement.executeUpdate();
+
+			try (ResultSet rs = statement.getGeneratedKeys()) {
+				if (rs.next()) {
+					ordine.setCodice(rs.getInt(1));
+				}
+			}
+
+			connection.commit();
+		} catch (SQLException e) {
+			e.printStackTrace();
+			throw new SQLException("Errore nell'inserimento dell'ordine: " + e.getMessage());
+		}
+	}
+
+	public List<Ordine> doRetrieveByDateRange(Date fromDate, Date toDate) throws SQLException {
+		String selectSQL = "SELECT * FROM " + NOME_TABELLA + " WHERE data BETWEEN ? AND ?";
+		List<Ordine> ordini = new ArrayList<>();
+		try (Connection connection = DriverManagerConnectionPool.getConnection();
+				PreparedStatement ps = connection.prepareStatement(selectSQL)) {
+			ps.setDate(1, new java.sql.Date(fromDate.getTime()));
+			ps.setDate(2, new java.sql.Date(toDate.getTime()));
+			try (ResultSet rs = ps.executeQuery()) {
+				while (rs.next()) {
+					Ordine ordine = new Ordine();
+					ordine.setCodice(rs.getInt("codice"));
+					ordine.setData(rs.getDate("data"));
+					ordine.setCostoTotale(rs.getDouble("costo_totale"));
+					ordine.setUtenteEmail(rs.getString("utente_email"));
+					ordini.add(ordine);
+				}
+			}
+		}
+		return ordini;
+	}
+
+	public List<Ordine> doRetrieveByNomeCognome(String nome, String cognome) throws SQLException {
+		String selectSQL = "SELECT o.* FROM " + NOME_TABELLA
+				+ " o JOIN utente u ON o.utente_email = u.email WHERE u.nome = ? AND u.cognome = ?";
+		List<Ordine> ordini = new ArrayList<>();
+		try (Connection connection = DriverManagerConnectionPool.getConnection();
+				PreparedStatement ps = connection.prepareStatement(selectSQL)) {
+			ps.setString(1, nome);
+			ps.setString(2, cognome);
+			try (ResultSet rs = ps.executeQuery()) {
+				while (rs.next()) {
+					Ordine ordine = new Ordine();
+					ordine.setCodice(rs.getInt("codice"));
+					ordine.setData(rs.getDate("data"));
+					ordine.setCostoTotale(rs.getDouble("costo_totale"));
+					ordine.setUtenteEmail(rs.getString("utente_email"));
+					ordini.add(ordine);
+				}
+			}
+		}
+		return ordini;
+	}
 }

@@ -18,8 +18,11 @@ public class CartaDAO implements BeanDAO<Carta, String> {
 		String insertSQL = "INSERT INTO " + NOME_TABELLA
 				+ " (numero_carta, scadenza_carta, nome_titolare, cognome_titolare, utente_email) "
 				+ "VALUES (?, ?, ?, ?, ?)";
-		try (Connection connection = DriverManagerConnectionPool.getConnection();
-				PreparedStatement statement = connection.prepareStatement(insertSQL)) {
+		Connection connection = null;
+		PreparedStatement statement = null;
+		try {
+			connection = DriverManagerConnectionPool.getConnection();
+			statement = connection.prepareStatement(insertSQL);
 
 			statement.setString(1, carta.getNumeroCarta());
 			statement.setDate(2, new java.sql.Date(carta.getScadenzaCarta().getTime()));
@@ -29,11 +32,63 @@ public class CartaDAO implements BeanDAO<Carta, String> {
 
 			int rowsAffected = statement.executeUpdate();
 			if (rowsAffected != 1) {
-				throw new SQLException("Errore durante l'inserimento di Carta, righe aggiornate: " + rowsAffected);
+				throw new SQLException("Errore durante l'inserimento della carta");
 			}
+			connection.commit(); // Commit the transaction
 		} catch (SQLException e) {
-			System.out.println("Errore SQL durante l'inserimento di Carta: " + e.getMessage());
+			if (connection != null) {
+				connection.rollback(); // Rollback the transaction on error
+			}
+			System.out.println("Errore SQL durante l'inserimento della carta: " + e.getMessage());
 			throw e;
+		} finally {
+			try {
+				if (statement != null) {
+					statement.close();
+				}
+			} catch (SQLException e) {
+				System.out.println("Errore durante la chiusura dello Statement: " + e.getMessage());
+			}
+			DriverManagerConnectionPool.releaseConnection(connection);
+		}
+	}
+
+	public void updateCarta(Carta carta) throws SQLException {
+		String updateSQL = "UPDATE " + NOME_TABELLA
+				+ " SET scadenza_carta = ?, nome_titolare = ?, cognome_titolare = ?, utente_email = ? "
+				+ "WHERE numero_carta = ?";
+		Connection connection = null;
+		PreparedStatement statement = null;
+		try {
+			connection = DriverManagerConnectionPool.getConnection();
+			statement = connection.prepareStatement(updateSQL);
+
+			statement.setDate(1, new java.sql.Date(carta.getScadenzaCarta().getTime()));
+			statement.setString(2, carta.getNomeTitolare());
+			statement.setString(3, carta.getCognomeTitolare());
+			statement.setString(4, carta.getUtenteEmail());
+			statement.setString(5, carta.getNumeroCarta());
+
+			int rowsUpdated = statement.executeUpdate();
+			if (rowsUpdated != 1) {
+				throw new SQLException("Errore durante l'aggiornamento della carta");
+			}
+			connection.commit(); // Commit the transaction
+		} catch (SQLException e) {
+			if (connection != null) {
+				connection.rollback(); // Rollback the transaction on error
+			}
+			System.out.println("Errore SQL durante l'aggiornamento della carta: " + e.getMessage());
+			throw e;
+		} finally {
+			try {
+				if (statement != null) {
+					statement.close();
+				}
+			} catch (SQLException e) {
+				System.out.println("Errore durante la chiusura dello Statement: " + e.getMessage());
+			}
+			DriverManagerConnectionPool.releaseConnection(connection);
 		}
 	}
 
@@ -128,26 +183,4 @@ public class CartaDAO implements BeanDAO<Carta, String> {
 		}
 	}
 
-	public void updateCarta(Carta carta) throws SQLException {
-		String updateSQL = "UPDATE " + NOME_TABELLA
-				+ " SET scadenza_carta = ?, nome_titolare = ?, cognome_titolare = ?, utente_email = ? "
-				+ "WHERE numero_carta = ?";
-		try (Connection connection = DriverManagerConnectionPool.getConnection();
-				PreparedStatement statement = connection.prepareStatement(updateSQL)) {
-
-			statement.setDate(1, new java.sql.Date(carta.getScadenzaCarta().getTime()));
-			statement.setString(2, carta.getNomeTitolare());
-			statement.setString(3, carta.getCognomeTitolare());
-			statement.setString(4, carta.getUtenteEmail());
-			statement.setString(5, carta.getNumeroCarta());
-
-			int rowsUpdated = statement.executeUpdate();
-			if (rowsUpdated != 1) {
-				throw new SQLException("Errore durante l'aggiornamento di Carta, righe aggiornate: " + rowsUpdated);
-			}
-		} catch (SQLException e) {
-			System.out.println("Errore SQL durante l'aggiornamento di Carta: " + e.getMessage());
-			throw e;
-		}
-	}
 }

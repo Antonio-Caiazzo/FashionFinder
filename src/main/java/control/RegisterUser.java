@@ -41,18 +41,15 @@ public class RegisterUser extends HttpServlet {
 		boolean userExists = false;
 
 		try {
-			// Check if user already exists
 			if (utenteDAO.doesUserExist(email)) {
 				userExists = true;
 			} else {
-				// Create new user object and populate fields
 				Utente newUser = new Utente();
 				newUser.setEmail(email);
 				newUser.setUsername(username);
 				newUser.setPsw(checkPsw(password));
 				newUser.setNome(nome);
 				newUser.setCognome(cognome);
-				// Convert date string to java.sql.Date
 				try {
 					java.util.Date date = new SimpleDateFormat("yyyy-MM-dd").parse(dataDiNascita);
 					newUser.setdata_di_nascita(new java.sql.Date(date.getTime()));

@@ -37,7 +37,6 @@
 			}
 			%>
 			<form class="auth-form" action="CheckoutServlet" method="post">
-
 				<div class="auth-container-header-text">Dati di spedizione</div>
 				<input class="auth-input" type="text" name="nome" placeholder="Nome"
 					value="<%=userRegistrato != null ? userRegistrato.getNome() : ""%>"
@@ -63,8 +62,11 @@
 
 				<div class="auth-container-header-text">Dati di pagamento</div>
 				<input class="auth-input" type="text" name="titolare"
-					placeholder="Titolare Carta"
-					value="<%=carta != null ? carta.getNomeTitolare() + " " + carta.getCognomeTitolare() : ""%>"
+					placeholder="Nome Titolare Carta"
+					value="<%=carta != null ? carta.getNomeTitolare() : ""%>" required />
+				<input class="auth-input" type="text" name="cognomeTitolare"
+					placeholder="Cognome Titolare Carta"
+					value="<%=carta != null ? carta.getCognomeTitolare() : ""%>"
 					required /> <input class="auth-input" type="text"
 					name="numeroCarta" placeholder="Numero Carta"
 					value="<%=carta != null ? carta.getNumeroCarta() : ""%>" required />
@@ -74,7 +76,6 @@
 
 				<button class="auth-button secondary" type="submit">Paga
 					Ora</button>
-
 			</form>
 		</div>
 		<%@ include file="./layout/footer.jsp"%>

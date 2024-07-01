@@ -29,7 +29,7 @@ public class ProdottiServlet extends HttpServlet {
 		}
 
 		try {
-			Collection<Prodotto> prodotti = prodottoDAO.getProdottiBySesso(sesso.charAt(0));
+			Collection<Prodotto> prodotti = prodottoDAO.getProdottiBySessoNonDeleted(sesso.charAt(0));
 			request.setAttribute("prodotti", prodotti);
 			String page = sesso.equals("u") ? "/uomo.jsp" : "/donna.jsp";
 			request.getRequestDispatcher(page).forward(request, response);

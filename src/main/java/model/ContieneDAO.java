@@ -34,19 +34,19 @@ public class ContieneDAO implements BeanDAO<Contiene, Integer> {
 		}
 	}
 
-	public void doSave(int ordineCodice, int prodottoCodice, int quantita) throws SQLException {
-		String insertSQL = "INSERT INTO " + NOME_TABELLA
-				+ " (ordine_codice, prodotto_codice, quantita) VALUES (?, ?, ?)";
+	public void doSave(int ordineCodice, int prodottoCodice, int quantita, double prezzo) throws SQLException {
+		String insertSQL = "INSERT INTO contiene (ordine_codice, prodotto_codice, quantita, prezzo) VALUES (?, ?, ?, ?)";
 		try (Connection connection = DriverManagerConnectionPool.getConnection();
 				PreparedStatement statement = connection.prepareStatement(insertSQL)) {
 			statement.setInt(1, ordineCodice);
 			statement.setInt(2, prodottoCodice);
 			statement.setInt(3, quantita);
+			statement.setDouble(4, prezzo);
 			statement.executeUpdate();
 			connection.commit();
 		} catch (SQLException e) {
 			e.printStackTrace();
-			throw new SQLException("Errore nell'inserimento del prodotto nell'ordine: " + e.getMessage());
+			throw new SQLException("Errore SQL durante l'inserimento in contiene: " + e.getMessage());
 		}
 	}
 
@@ -168,6 +168,7 @@ public class ContieneDAO implements BeanDAO<Contiene, Integer> {
 					contiene.setOrdineCodice(rs.getInt("ordine_codice"));
 					contiene.setProdottoCodice(rs.getInt("prodotto_codice"));
 					contiene.setQuantita(rs.getInt("quantita"));
+					contiene.setPrezzo(rs.getDouble("prezzo"));
 					contieneList.add(contiene);
 				}
 			}

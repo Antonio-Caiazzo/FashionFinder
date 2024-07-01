@@ -13,30 +13,15 @@
 	<div class="main-content-container">
 		<%
 		Ordine ordine = (Ordine) request.getAttribute("ordine");
-		List<Contiene> contieneList = null;
-		Object contieneListObj = request.getAttribute("contieneList");
-		if (contieneListObj instanceof List<?>) {
-			List<?> tempList = (List<?>) contieneListObj;
-			boolean validList = true;
-			for (Object item : tempList) {
-				if (!(item instanceof Contiene)) {
-			validList = false;
-			break;
-				}
-			}
-			if (validList) {
-				@SuppressWarnings("unchecked")
-				List<Contiene> checkedList = (List<Contiene>) tempList;
-				contieneList = checkedList;
-			}
-		}
+		@SuppressWarnings("unchecked")
+		List<Contiene> contieneList = (List<Contiene>) request.getAttribute("contieneList");
 		%>
 		<table>
 			<caption>
-				ORDINE #<%=ordine.getCodice()%></caption>
+				ORDINE #<%=ordine != null ? ordine.getCodice() : "Non disponibile"%></caption>
 			<thead>
 				<tr>
-					<th scope="col">Prodotto nome</th>
+					<th scope="col">Prodotto</th>
 					<th scope="col">Quantità</th>
 					<th scope="col">Prezzo</th>
 				</tr>
@@ -49,27 +34,43 @@
 						ProdottoDAO prodottoDAO = new ProdottoDAO();
 						Prodotto prodotto = null;
 						try {
-					prodotto = prodottoDAO.doRetrieveByKey(contiene.getProdottoCodice());
+					prodotto = prodottoDAO.doRetrieveByKeyEvenIfDeleted(contiene.getProdottoCodice());
 						} catch (SQLException e) {
+					e.printStackTrace();
 					response.sendRedirect(request.getContextPath() + "/errorPage.jsp");
 						}
 						if (prodotto != null) {
-					totalCost += prodotto.getCosto() * contiene.getQuantita();
+					totalCost += contiene.getPrezzo() * contiene.getQuantita();
 				%>
 				<tr>
 					<td data-label="Prodotto"><%=prodotto.getNome()%></td>
 					<td data-label="Quantità"><%=contiene.getQuantita()%></td>
-					<td data-label="Prezzo"><%=prodotto.getCosto()%></td>
+					<td data-label="Prezzo"><%=contiene.getPrezzo()%></td>
+				</tr>
+				<%
+				} else {
+				%>
+				<tr>
+					<td colspan="3">Prodotto non trovato per il codice: <%=contiene.getProdottoCodice()%></td>
 				</tr>
 				<%
 				}
 				}
+				} else {
+				%>
+				<tr>
+					<td colspan="3">Nessun elemento trovato per l'ordine.</td>
+				</tr>
+				<%
 				}
 				%>
 			</tbody>
 		</table>
 		<p>
-			Totale prezzo dell'ordine: $<%=totalCost%></p>
+			Totale prezzo dell'ordine:
+			<%=String.format("%.2f", totalCost)%>
+			€
+		</p>
 		<%@ include file="./layout/footer.jsp"%>
 	</div>
 </body>
